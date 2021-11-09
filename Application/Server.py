@@ -18,7 +18,7 @@ def Handle(client):
     while True:
         try:
             data = client.recv(1024)               #Receive data constantly
-            print(data)                            #For now just print the data stream
+            print(data.decode())                   #For now just print the data stream
         except:
             print(f"{client} not connected")
             break
