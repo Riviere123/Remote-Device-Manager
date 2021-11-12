@@ -1,5 +1,7 @@
+from random import randrange
 import ssl, socket, threading
-from DataFormatter import Protocol_ReceiveLength, Protocol_Send
+from DataFormatter import Protocol_Receive, Protocol_Send
+import random
 
 
 
@@ -10,26 +12,28 @@ def Connect(host, port):
     conn.connect((host, port))
     cert = conn.getpeercert()
 
+    print(f"Connected to {host}:{port}")
+
+    Protocol_Send(conn, str(random.randrange(0,10000)))
+    Protocol_Send(conn, "DeviceArchetype")
+
     return conn
 
-def Receive_Data(connection):                                    #Handles the receiving of messages from the server
+def Receive_Data(connection):
     while True:
         try:
-            size = Protocol_ReceiveLength(connection)        #Get the size of the message
-            message = connection.recv(size).decode()        #Recieve messages from server
-            print(message)                                  #Print the message.
+            message = Protocol_Receive(connection)       
+            print("\n" + message)                                 
 
-        except:                                       #We will add the ability to issue commands to the device from the server
-            print("An error occurred! you may have lost connection.")
-            connection.close()                        #If we lose connection close the connection.
+        except:                                             
+            print("Connection to host lost.")
+            connection.close()   
             break
 
-def Send_Data(connection):                                      #Send Data to the server
+def Send_Data(connection):                                      
     while True:
-        message = input("Write a message: ").encode('ascii')
-        Protocol_Send(connection, message)                     #Send the message using my protocol
-
-
+        message = input("Write a message: ")
+        Protocol_Send(connection, message)                    
 
 if __name__ == "__main__":
     context = ssl.create_default_context()
@@ -37,8 +41,8 @@ if __name__ == "__main__":
 
     connection = Connect("localhost", 10023)
 
-    receive_thread = threading.Thread(target=Receive_Data, args=(connection,))  #Creates and starts a thread for receiving data
+    receive_thread = threading.Thread(target=Receive_Data, args=(connection,))  
     receive_thread.start()
 
-    send_thread = threading.Thread(target=Send_Data, args=(connection,))      #Creates and starts a thread for sending data
+    send_thread = threading.Thread(target=Send_Data, args=(connection,))    
     send_thread.start()
