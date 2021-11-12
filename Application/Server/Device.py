@@ -10,6 +10,7 @@ class Device():       #The device object to store device information and eventua
     def __repr__(self) -> str:
         return (f"Name: {self.name} archetype: {self.archetype} Address: {self.client}")
 
+    ###Changes the devices name and changes the key in the devices dictionary
     def Change_Name(self, new_name):
         del Device.devices[self.name]
         self.name = new_name

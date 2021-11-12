@@ -4,21 +4,22 @@ from DataFormatter import Protocol_Receive, Protocol_Send
 import random
 
 
-
+###Connects to the host on the given port
 def Connect(host, port):
-    conn = context.wrap_socket(socket.socket(socket.AF_INET),
+    conn = context.wrap_socket(socket.socket(socket.AF_INET),    #Wrap the socket with TLS
                                         server_hostname=host)
 
     conn.connect((host, port))
-    cert = conn.getpeercert()
+    # cert = conn.getpeercert()                                     #save the cert as cert variable
 
     print(f"Connected to {host}:{port}")
 
-    Protocol_Send(conn, str(random.randrange(0,10000)))
-    Protocol_Send(conn, "DeviceArchetype")
+    Protocol_Send(conn, str(random.randrange(0,10000)))            #Send the device name TEMPORARILY setting to random number
+    Protocol_Send(conn, "DeviceArchetype")                         #Sending the device type
 
-    return conn
+    return conn                                                    #Returns the connection object
 
+###Receives data from the given connection
 def Receive_Data(connection):
     while True:
         try:
@@ -30,19 +31,21 @@ def Receive_Data(connection):
             connection.close()   
             break
 
+###Sends data to the given connection
 def Send_Data(connection):                                      
     while True:
         message = input("Write a message: ")
         Protocol_Send(connection, message)                    
 
+
 if __name__ == "__main__":
-    context = ssl.create_default_context()
-    context.load_verify_locations('./Auth/certificate.pem')
+    context = ssl.create_default_context()                                    #helps create SSLContext objects for common purposes
+    context.load_verify_locations('./Auth/certificate.pem')                   #Load the cert so it will be accepted since it is self signed
 
     connection = Connect("localhost", 10023)
 
-    receive_thread = threading.Thread(target=Receive_Data, args=(connection,))  
+    receive_thread = threading.Thread(target=Receive_Data, args=(connection,))   #Starting thread to recieve data
     receive_thread.start()
 
-    send_thread = threading.Thread(target=Send_Data, args=(connection,))    
+    send_thread = threading.Thread(target=Send_Data, args=(connection,))         #Starting thread to send data
     send_thread.start()

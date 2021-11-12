@@ -12,7 +12,7 @@ def Generate_Self_Signed_Certificate():
         key_size=2048,
     )
     # Write our key to disk for safe keeping
-    with open("./SSL_Example/key.pem", "wb") as f:
+    with open("./Auth/key.pem", "wb") as f:
         f.write(key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -47,7 +47,7 @@ def Generate_Self_Signed_Certificate():
     # Sign our certificate with our private key
     ).sign(key, hashes.SHA256())
     # Write our certificate out to disk.
-    with open("./SSL_Example/certificate.pem", "wb") as f:
+    with open("./Auth/certificate.pem", "wb") as f:
         f.write(cert.public_bytes(serialization.Encoding.PEM))
 
 
