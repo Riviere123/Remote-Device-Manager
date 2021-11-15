@@ -24,11 +24,11 @@ def Receive_Data(connection):
     while True:
         try:
             message = Protocol_Receive(connection)       
-            print("\n" + message)                                 
+            print("\n" + message)
 
         except:                                             
             print("Connection to host lost.")
-            connection.close()   
+            connection.close()
             break
 
 ###Sends data to the given connection

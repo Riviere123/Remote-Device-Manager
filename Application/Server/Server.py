@@ -1,49 +1,23 @@
 import socket, ssl, threading, os
 from Device import Device
 from DataFormatter import Protocol_Send, Protocol_Receive
+from Commands import Client_Command, Server_Command
 
 ### Each client will have there own Deal_With_Client Thread ##
-### Client Commands ###
-### set name (name) sets the devices name
-### set type (type) sets the devices type
 def Deal_With_Client(connstream):
     client_device = Device(connstream, Protocol_Receive(connstream), Protocol_Receive(connstream)) #Set the client_device to a newly created Device object.
     while True:                                                                                    #Set device name and archetype with first 2 recieved data
         try:
             data = Protocol_Receive(connstream)                                      #data = Recieved data
-            if data[:8].lower() == "set name":                                       #If the first 8 characters from the recieved data is "set name"       
-                split_data = data.split(" ")                                         #Split the data by spaces         
-                new_name = split_data[2]                                             #Take the third position as the new name                              
-                print(f"{client_device.name}'s name has been changed to {new_name}") 
-                client_device.Change_Name(new_name)                                  #calls the change name method from the device
-            elif data[:8].lower() == "set type":                                     #If the first 8 characters from the recieved data is "set type"
-                split_data = data.split(" ")  
-                new_type = split_data[2]                                             #Take the third position as the new name 
-                print(f"{client_device.name}'s device type changed to {new_type}")   
-                client_device.archetype = new_type                                   #Set archetype of the Device object of the client  
-                
-            
-            else:
-                print(f"{client_device.name}: {data}")                               #For now just print the data stream
-
+            Client_Command(client_device, data)                                      #Checks the command and reacts accordingly.
         except:
             print(f"{connstream} Disconnected")                                      #Client disconnected   
             break
 
 ### Starts the Terminal and allows commands to be entered from the server ###
-### Commands ###
-### list - Lists all stored devices names and types
-### Send (Device) (Message) - Sends the message to the device client
 def Terminal():                                                                                                                                                      
-    while True:                                                                                                                                                      
-        command = input("").split(" ")                                                                                                                               
-        if command[0].lower() == "send":     
-            try:
-                Protocol_Send(Device.devices[command[1]].client, " ".join(command[2:]))
-            except:
-                print("Error: Client doesn't exist by that name.")
-        if command[0].lower() == "list":
-            [print(f"Name:{Device.devices[i].name} Type:{Device.devices[i].archetype}") for i in Device.devices.keys()]
+    while True:                         
+        Server_Command()                                                                                                                             
 
 #starts the server with the provided IP and Port
 def Start_Server(host, port):
