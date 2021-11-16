@@ -1,16 +1,19 @@
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography import x509
-from cryptography.x509.oid import NameOID
-from cryptography.hazmat.primitives import hashes
-import datetime
-
-def Generate_Self_Signed_Certificate():
+def generate_selfsigned_cert(hostname, ip_addresses=None, key=None):
+    """Generates self signed certificate for a hostname, and optional IP addresses."""
+    from cryptography import x509
+    from cryptography.x509.oid import NameOID
+    from cryptography.hazmat.primitives import hashes
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import rsa
+    import ipaddress, datetime
     # Generate our key
-    key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048,
-    )
+    if key is None:
+        key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+            backend=default_backend(),
+        )
     # Write our key to disk for safe keeping
     with open("./Auth/key.pem", "wb") as f:
         f.write(key.private_bytes(
@@ -18,41 +21,48 @@ def Generate_Self_Signed_Certificate():
             format=serialization.PrivateFormat.TraditionalOpenSSL,
             encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
         ))
-
-    # Various details about who we are. For a self-signed certificate the
-    # subject and issuer are always the same.
-    subject = issuer = x509.Name([
-        x509.NameAttribute(NameOID.COUNTRY_NAME, u"US"),
-        x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"Massachusetts"),
-        x509.NameAttribute(NameOID.LOCALITY_NAME, u"Boston"),
-        x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"My Company"),
-        x509.NameAttribute(NameOID.COMMON_NAME, u"mysite.com"),
+    name = x509.Name([
+        x509.NameAttribute(NameOID.COMMON_NAME, hostname)
     ])
-    cert = x509.CertificateBuilder().subject_name(
-        subject
-    ).issuer_name(
-        issuer
-    ).public_key(
-        key.public_key()
-    ).serial_number(
-        x509.random_serial_number()
-    ).not_valid_before(
-        datetime.datetime.utcnow()
-    ).not_valid_after(
-        # Our certificate will be valid for 10 days
-        datetime.datetime.utcnow() + datetime.timedelta(days=365)
-    ).add_extension(
-        x509.SubjectAlternativeName([x509.DNSName(u"localhost")]),
-        critical=False,
-    # Sign our certificate with our private key
-    ).sign(key, hashes.SHA256())
-    # Write our certificate out to disk.
+ 
+    # best practice seem to be to include the hostname in the SAN, which *SHOULD* mean COMMON_NAME is ignored.    
+    alt_names = [x509.DNSName(hostname)]
+    
+    # allow addressing by IP, for when you don't have real DNS (common in most testing scenarios 
+    if ip_addresses:
+        for addr in ip_addresses:
+            # openssl wants DNSnames for ips...
+            alt_names.append(x509.DNSName(addr))
+            # ... whereas golang's crypto/tls is stricter, and needs IPAddresses
+            # note: older versions of cryptography do not understand ip_address objects
+            alt_names.append(x509.IPAddress(ipaddress.ip_address(addr)))
+    
+    san = x509.SubjectAlternativeName(alt_names)
+    
+    # path_len=0 means this cert can only sign itself, not other certs.
+    basic_contraints = x509.BasicConstraints(ca=True, path_length=0)
+    now = datetime.datetime.utcnow()
+    cert = (
+        x509.CertificateBuilder()
+        .subject_name(name)
+        .issuer_name(name)
+        .public_key(key.public_key())
+        .serial_number(1000)
+        .not_valid_before(now)
+        .not_valid_after(now + datetime.timedelta(days=10*365))
+        .add_extension(basic_contraints, False)
+        .add_extension(san, False)
+        .sign(key, hashes.SHA256(), default_backend())
+    )
+    cert_pem = cert.public_bytes(encoding=serialization.Encoding.PEM)
+    key_pem = key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption(),
+    )
     with open("./Auth/certificate.pem", "wb") as f:
         f.write(cert.public_bytes(serialization.Encoding.PEM))
-
+    return cert_pem, key_pem
 
 if __name__ == "__main__":
-    Generate_Self_Signed_Certificate()
-
-
-
+    generate_selfsigned_cert('localhost', ip_addresses=["10.0.0.64"])

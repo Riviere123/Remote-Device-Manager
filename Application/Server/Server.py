@@ -23,7 +23,6 @@ def Terminal():
 def Start_Server(host, port):
     context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)                         #Setting context to default client_auth context
     context.load_cert_chain(certfile="./Auth/certificate.pem", keyfile="./Auth/key.pem")  #Loads the Certificate and Key
-    
     bindsocket = socket.socket()                                                          
     bindsocket.bind((host, port))                                                        #binding the socket and port
     bindsocket.listen()                                                                  #listening on that port
@@ -44,5 +43,5 @@ def Start_Server(host, port):
 
 
 if __name__ == "__main__":
-    server_thread = threading.Thread(target=Start_Server, args=('localhost', 10023))        #Start the server
+    server_thread = threading.Thread(target=Start_Server, args=("0.0.0.0", 10023))        #Start the server
     server_thread.start()
