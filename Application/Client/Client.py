@@ -2,7 +2,6 @@ from random import randrange
 import ssl, socket, threading
 from DataFormatter import Protocol_Receive, Protocol_Send
 from CommandHelper import Client_Command
-import random
 
 
 ###Connects to the host on the given port
@@ -15,7 +14,7 @@ def Connect(host, port):
 
     print(f"Connected to {host}:{port}")
 
-    Protocol_Send(conn, str(random.randrange(0,10000)))            #Send the device name TEMPORARILY setting to random number
+    Protocol_Send(conn, str(randrange(0,10000)))            #Send the device name TEMPORARILY setting to random number
     Protocol_Send(conn, "DeviceArchetype")                         #Sending the device type
 
     return conn                                                    #Returns the connection object

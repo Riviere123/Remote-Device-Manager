@@ -1,7 +1,7 @@
-import socket, ssl, threading, os
+import socket, ssl, threading
 from Device import Device
 from DataFormatter import Protocol_Send, Protocol_Receive
-from Commands import Client_Command, Server_Command
+from CommandHandler import Client_Command, Server_Command
 
 ### Each client will have there own Deal_With_Client Thread ##
 def Deal_With_Client(connstream):
