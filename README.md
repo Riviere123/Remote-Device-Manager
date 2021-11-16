@@ -111,8 +111,9 @@
 2. alter the Server and Clients Config files to fit your systems IP and desired ports
 3. Generate your Certificate with the GenerateCertificate.py
     This will generate a new certificate that fits the given information in the Config files
-4. Run Server.py it will ask you for the password that you had set in the servers Config.py file
-5. Run the client on a device, If configured correctly it will automaticly connect to the server.
+4. since the generated certificates are self signed, you will need to make a copy of certifcate.pem(found in servers Auth folder) and place it in the clients Auth folder
+5. Run Server.py it will ask you for the password that you had set in the servers Config.py file
+6. Run the client on a device, If configured correctly it will automaticly connect to the server.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
