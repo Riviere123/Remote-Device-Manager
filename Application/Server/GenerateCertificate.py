@@ -1,3 +1,5 @@
+import Config
+
 def generate_selfsigned_cert(hostname, ip_addresses=None, key=None):
     """Generates self signed certificate for a hostname, and optional IP addresses."""
     from cryptography import x509
@@ -65,4 +67,4 @@ def generate_selfsigned_cert(hostname, ip_addresses=None, key=None):
     return cert_pem, key_pem
 
 if __name__ == "__main__":
-    generate_selfsigned_cert('localhost', ip_addresses=["10.0.0.64"])
+    generate_selfsigned_cert(Config.HOST_NAME, ip_addresses=Config.CERT_IP)

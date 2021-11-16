@@ -2,6 +2,7 @@ import socket, ssl, threading
 from Device import Device
 from DataFormatter import Protocol_Send, Protocol_Receive
 from CommandHandler import Client_Command, Server_Command
+import Config
 
 ### Each client will have there own Deal_With_Client Thread ##
 def Deal_With_Client(connstream):
@@ -43,5 +44,5 @@ def Start_Server(host, port):
 
 
 if __name__ == "__main__":
-    server_thread = threading.Thread(target=Start_Server, args=("0.0.0.0", 10023))        #Start the server
+    server_thread = threading.Thread(target=Start_Server, args=(Config.IP_ADDRESS, Config.PORT))        #Start the server
     server_thread.start()

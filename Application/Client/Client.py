@@ -2,6 +2,7 @@ from random import randrange
 import ssl, socket, threading
 from DataFormatter import Protocol_Receive, Protocol_Send
 from CommandHelper import Client_Command
+import Config
 
 
 ###Connects to the host on the given port
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     context = ssl.create_default_context()                                    #helps create SSLContext objects for common purposes
     context.load_verify_locations('./Auth/certificate.pem')                   #Load the cert so it will be accepted since it is self signed
 
-    connection = Connect("localhost", 10023)
+    connection = Connect(Config.SERVER_IP, Config.SERVER_PORT)
 
     receive_thread = threading.Thread(target=Receive_Data, args=(connection,))   #Starting thread to recieve data
     receive_thread.start()
