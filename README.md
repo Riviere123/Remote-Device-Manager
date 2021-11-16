@@ -90,52 +90,63 @@
 
 
 ### Built With
-* [python](https://www.python.org/)
+
+* [Next.js](https://nextjs.org/)
+* [React.js](https://reactjs.org/)
+* [Vue.js](https://vuejs.org/)
+* [Angular](https://angular.io/)
+* [Svelte](https://svelte.dev/)
+* [Laravel](https://laravel.com)
+* [Bootstrap](https://getbootstrap.com)
+* [JQuery](https://jquery.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
 <!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/Riviere123/IoT-Central-Manager.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+1. Download the code
+2. alter the Server and Clients Config files to fit your systems IP and desired ports
+3. Generate your Certificate with the GenerateCertificate.py
+    This will generate a new certificate that fits the given information in the Config files
+4. Run Server.py it will ask you for the password that you had set in the servers Config.py file
+5. Run the client on a device, If configured correctly it will automaticly connect to the server.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Commands
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+<b>-Client Commands-</b>
+These are commands that the client can send to the server.
+1. set name - sets the clients name on the server.
+2. set type - sets what type of device the client is.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+<b>-Server Commands-</b>
+These are commands you can run from the server
+
+1. send (device name) (message) | Sends a message to the desired client
+
+2. list or ls | lists all connected devices
+
+3. run (device name) (message) | send a terminal command to the client and returns the results to the server
+
+4. group create (group name) | Creates a group
+
+5. group list or group ls | lists the groups and clients belonging to those groups
+
+6. group add (group name) (device name) | adds the device to the group
+
+7. group delete (group name) | deletes the group
+
+8. group remove (group name) (device name) | removes the device from the group
+
+9. group send (group name) (message) | Broadcasts the message to all devices in the group
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
