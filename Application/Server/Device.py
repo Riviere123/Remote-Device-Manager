@@ -16,15 +16,22 @@ class Device():       #The device object to store device information and eventua
         Device.devices[new_name] = self
 
 class Group():
-    groups = []
+    groups = {}
 
     def __init__(self, name):
         self.devices = []
         self.name = name
-        Group.groups.append(self)
+        Group.groups[self.name] = self
     
     def __repr__(self) -> str:
         return (f"Group:{self.name} Devices:{self.devices}")
     
     def Add_Device(self, device):
         self.devices.append(device)
+    
+    def Remove_Device(self, device):
+        self.devices.remove(device)
+    
+    def Group_Delete(name):
+        del Group.groups[name]
+

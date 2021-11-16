@@ -1,6 +1,7 @@
 from random import randrange
 import ssl, socket, threading
 from DataFormatter import Protocol_Receive, Protocol_Send
+from CommandHelper import Client_Command
 import random
 
 
@@ -23,9 +24,8 @@ def Connect(host, port):
 def Receive_Data(connection):
     while True:
         try:
-            message = Protocol_Receive(connection)       
-            print("\n" + message)
-
+            message = Protocol_Receive(connection)
+            Client_Command(connection, message)
         except:                                             
             print("Connection to host lost.")
             connection.close()
@@ -34,7 +34,7 @@ def Receive_Data(connection):
 ###Sends data to the given connection
 def Send_Data(connection):                                      
     while True:
-        message = input("Write a message: ")
+        message = input("")
         Protocol_Send(connection, message)                    
 
 

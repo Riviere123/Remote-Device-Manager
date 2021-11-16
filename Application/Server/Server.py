@@ -36,7 +36,7 @@ def Start_Server(host, port):
         try:
             client, addr = bindsocket.accept()                                              #Accept clients and assign pull client and ip
             connstream = context.wrap_socket(client, server_side=True)                      #Wrap the socket with TLS
-
+            print(f"Device connected from {addr}")
             thread = threading.Thread(target=Deal_With_Client, args=(connstream,))          #Creating a thread for each client                                                            
             thread.start()                                                                  #Starting the thread, each connection will start a new thread 
         except:
