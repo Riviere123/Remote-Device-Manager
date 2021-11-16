@@ -91,14 +91,15 @@
 
 ### Built With
 
-* [Next.js](https://nextjs.org/)
+<!-- * [Next.js](https://nextjs.org/)
 * [React.js](https://reactjs.org/)
 * [Vue.js](https://vuejs.org/)
 * [Angular](https://angular.io/)
 * [Svelte](https://svelte.dev/)
 * [Laravel](https://laravel.com)
 * [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+* [JQuery](https://jquery.com) -->
+* [Python](https://www.python.org/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -156,10 +157,11 @@ These are commands you can run from the server
 <!-- ROADMAP -->
 ## Roadmap
 
-- [] Feature 1
-- [] Feature 2
-- [] Feature 3
-    - [] Nested Feature
+- [<div color="red">-----</div>] More Commands
+    - [<div color="red">-----</div>] Group Run
+- [<div color="red">-----</div>] GUI
+- [<div color="red">-----</div>] Full Release
+
 
 See the [open issues](https://github.com/Riviere123/IoT-Central-Manager/issues) for a full list of proposed features (and known issues).
 
