@@ -21,7 +21,7 @@ def generate_selfsigned_cert(hostname, ip_addresses=None, key=None):
         f.write(key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
-            encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
+            encryption_algorithm=serialization.BestAvailableEncryption(Config.PASSWORD),
         ))
     name = x509.Name([
         x509.NameAttribute(NameOID.COMMON_NAME, hostname)

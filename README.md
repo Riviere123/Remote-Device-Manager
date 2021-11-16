@@ -199,7 +199,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Curtis Redgate -  - Curtis.Redgate@gmail.com
+Curtis Redgate - Curtis.Redgate@gmail.com
 
 Project Link: [https://github.com/Riviere123/IoT-Central-Manager](https://github.com/Riviere123/IoT-Central-Manager)
 
@@ -208,11 +208,11 @@ Project Link: [https://github.com/Riviere123/IoT-Central-Manager](https://github
 
 
 <!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+<!-- ## Acknowledgments
 
 * []()
 * []()
-* []()
+* []() -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
