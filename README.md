@@ -26,22 +26,29 @@
 
 
 
-<!-- PROJECT LOGO -->
+<!-- PROJECT LOGO 
 <br />
 <div align="center">
   <a href="https://github.com/Riviere123/IoT-Central-Manager">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
-
+-->
 <h3 align="center">Device Management System</h3>
 
   <p align="center">
-    project_description
-    <br />
-    <a href="https://github.com/Riviere123/IoT-Central-Manager"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/Riviere123/IoT-Central-Manager">View Demo</a>
+    Organize Connected Devices into Groups. Group devices in certain rooms, floors, or buildings and manage access policies and privelages remotely.
+    Remotely Manage Connected Devices. Device Management enables you to patch and run terminal commands remotely from the server.
+    Device Management establishes TLS socket connections to and from your clients and servers. All data in transit will be encrypted and secured.
+  
+    Features to come:
+    Push files to clients from the server. 
+    MySQL Database for storing custom Device metrics. 
+    Incorporate video streaming from client devices.
+    Fine-Grained device logging features.
+    Password protected server login from devices.
+    User Interface featuring the following: A fleet overview with information on each device. Visual representation of data points gathered by devices and stored in the    database. Camera feeds for specified devices with atached cameras. Aggregated error logs for remote devices. Search functionality to easily find specific devices.
+   Feel free to request any features you'd like to see added. 
+   <br />
     ·
     <a href="https://github.com/Riviere123/IoT-Central-Manager/issues">Report Bug</a>
     ·
@@ -64,16 +71,13 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#commands">Commands</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -106,22 +110,24 @@
 
 
 <!-- GETTING STARTED -->
+### Getting-started
 ### Installation
 
-1. Download the code
-2. alter the Server and Clients Config files to fit your systems IP and desired ports
+1. Download the files
+2. Alter the Server and Clients Config files to fit your systems IP and desired ports
 3. Generate your Certificate with the GenerateCertificate.py
     This will generate a new certificate that fits the given information in the Config files
-4. since the generated certificates are self signed, you will need to make a copy of certifcate.pem(found in servers Auth folder) and place it in the clients Auth folder
-5. Run Server.py it will ask you for the password that you had set in the servers Config.py file
-6. Run the client on a device, If configured correctly it will automaticly connect to the server.
+4. Since the generated certificates are self signed, you will need to make a copy of certifcate.pem(found in servers Auth folder) and place it in the clients Auth folder
+5. Distribute the client files to your client devices.
+6. Run Server.py it will ask you for the password that you had set in the servers Config.py file
+7. Run Client.py on a device, If configured correctly it will automaticly connect to the server.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 
 <!-- USAGE EXAMPLES -->
-## Commands
+### Commands
 
 <b>-Client Commands-</b>
 These are commands that the client can send to the server.
@@ -154,13 +160,13 @@ These are commands you can run from the server
 
 
 
-<!-- ROADMAP -->
+<!-- ROADMAP 
 ## Roadmap
 
 - [-----] More Commands
     - [-----] Group Run
 - [-----] GUI
-- [-----] Full Release
+- [-----] Full Release-->
 
 
 See the [open issues](https://github.com/Riviere123/IoT-Central-Manager/issues) for a full list of proposed features (and known issues).
