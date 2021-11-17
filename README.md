@@ -38,7 +38,7 @@
   <p align="center">
     Organize Connected Devices into Groups. Group devices in certain rooms, floors, or buildings and manage access policies and privelages remotely.
     Remotely Manage Connected Devices. Device Management enables you to patch and run terminal commands remotely from the server.
-    Security. Device Management establishes TLS socket connections to and from your clients and servers. All data in transit will be encrypted and secured.
+    Device Management establishes TLS socket connections to and from your clients and servers. All data in transit will be encrypted and secured.
   
     Features to come:
     Push files to clients from the server. 
