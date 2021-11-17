@@ -36,12 +36,18 @@
 <h3 align="center">Device Management System</h3>
 
   <p align="center">
-    project_description
-    <br />
-    <a href="https://github.com/Riviere123/IoT-Central-Manager"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/Riviere123/IoT-Central-Manager">View Demo</a>
+    Organize Connected Devices into Groups. You can group your devices into logical groups. Group devices in certain rooms or floors and manage access policies and privelages remotely.
+    Remotely Manage Connected Devices. Device Management enables you to patch and run terminal commands remotely from the server.
+    Security. Device Management establishes TLS socket connections to and from your clients and servers. All data in transit will be encrypted and secured.
+  
+    Features to come:
+    Push files to clients from the server. 
+    MySQL Database for storing custom Device metrics. 
+    Incorporate video streaming from client devices.
+    Fine-Grained device logging features.
+    User Interface featuring the following: A fleet overview with information on each device. Visual representation of data points gathered by devices and stored in the    database. Camera feeds for specified devices with atached cameras. Aggregated error logs for remote devices. Search functionality to easily find specific devices.
+   Feel free to request any features you'd like to see added. 
+   <br />
     ·
     <a href="https://github.com/Riviere123/IoT-Central-Manager/issues">Report Bug</a>
     ·
