@@ -36,7 +36,7 @@
 <h3 align="center">Device Management System</h3>
 
   <p align="center">
-    Organize Connected Devices into Groups. Group devices in certain rooms, floors, or buildings and manage access policies and privelages remotely.
+    Organize Connected Devices into Groups. Group devices in certain rooms, floors, or buildings and manage access policies and privileges remotely.
     Remotely Manage Connected Devices. Device Management enables you to patch and run terminal commands remotely from the server.
     Device Management establishes TLS socket connections to and from your clients and servers. All data in transit will be encrypted and secured.
   
