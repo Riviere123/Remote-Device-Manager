@@ -162,13 +162,13 @@ These are commands you can run from the server
 
 
 
-<!-- ROADMAP -->
+<!-- ROADMAP 
 ## Roadmap
 
 - [-----] More Commands
     - [-----] Group Run
 - [-----] GUI
-- [-----] Full Release
+- [-----] Full Release-->
 
 
 See the [open issues](https://github.com/Riviere123/IoT-Central-Manager/issues) for a full list of proposed features (and known issues).
