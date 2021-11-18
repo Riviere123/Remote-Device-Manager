@@ -11,25 +11,22 @@ def Check_For_Client_Command(split_data):
         if command in client_commands:
             return command
 def Client_Command(client_device, data):
-    try:
-        split_data = data.lower().split(" ")
-        command = Check_For_Client_Command(split_data)
-        if command:
-            print(f"{command} called from {client_device.name}")
-            if command == "set name":
-                name = split_data[2]
-                Set_Name(client_device, name)                               #calls the change name method from the device
-            elif command == "set type":
-                new_type = split_data[2]     
-                Set_Type(client_device, new_type)                                    #Set archetype of the Device object of the client 
-        else:
-            print(f"{client_device.name}: {data}")                                    #For now just print the data strea
-    except:
-        print(f"{client_device.name}: {data}")                                        #For now just print the data stream
+    split_data = data.lower().split(" ")
+    command = Check_For_Client_Command(split_data)
+    if command:
+        print(f"{command} called from {client_device.name}")
+        if command == "set name":
+            name = split_data[2]
+            Set_Name(client_device, name)                               #calls the change name method from the device
+        elif command == "set type":
+            new_type = split_data[2]     
+            Set_Type(client_device, new_type)                                    #Set archetype of the Device object of the client 
+    else:
+        print(f"{client_device.name}: {data}")                                    #For now just print the data strea
 
 
 ################## Commands called from server ############################
-
+######Formats the data to fit the corresponding command then runs it#######
 
 server_commands=[
     "send", "list", "ls", "run", 

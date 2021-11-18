@@ -16,10 +16,8 @@ def Set_Type(client_device, new_type):
 ################## Commands called from server ############################
 def Send(device, message):
     Protocol_Send(device.client, message)
-    print(f"Message successfully sent to {device.name}")
 def List():
     [print(f"ID:{i} Name:{Device.devices[i].name} Type:{Device.devices[i].archetype}") for i in Device.devices.keys()]
-
 def Run(device, run_command):
     print(run_command)
     Protocol_Send(device.client,run_command)
