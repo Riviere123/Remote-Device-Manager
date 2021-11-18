@@ -1,13 +1,19 @@
+from typing import Counter
+
+
 class Device():       #The device object to store device information and eventually functionality
     devices = {}      #List of all devices created
+    count = 0
     def __init__(self, client, name, archetype):
+        Device.count += 1
+        self.id = str(Device.count)
         self.client = client                     #Pass the socket object as client
         self.name = name                         #Set the name of the device(nickname)
         self.archetype = archetype               #Set the type of device that it is. will need to rework this for devices that have more than one sensor etc...           #
-        Device.devices[self.name] = (self)       #Adds the device to the devices dictionary
+        Device.devices[self.id] = (self)       #Adds the device to the devices dictionary
     
     def __repr__(self) -> str:
-        return (f"Name: {self.name} archetype: {self.archetype} Address: {self.client}")
+        return (f"ID: {self.id} Name: {self.name} archetype: {self.archetype}")
 
     ###Changes the devices name and changes the key in the devices dictionary
     def Change_Name(self, new_name):
@@ -17,7 +23,6 @@ class Device():       #The device object to store device information and eventua
 
 class Group():
     groups = {}
-
     def __init__(self, name):
         self.devices = []
         self.name = name

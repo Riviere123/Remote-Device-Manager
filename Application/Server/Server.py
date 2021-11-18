@@ -12,7 +12,7 @@ def Deal_With_Client(connstream):
             data = Protocol_Receive(connstream)                                      #data = Recieved data
             Client_Command(client_device, data)                                      #Checks the command and reacts accordingly.
         except:
-            print(f"{connstream} Disconnected")                                      #Client disconnected   
+            print(f"{connstream} Disconnected")                                      #Client disconnected  
             break
 
 ### Starts the Terminal and allows commands to be entered from the server ###
