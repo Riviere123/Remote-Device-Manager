@@ -23,4 +23,7 @@ def Terminal_Command(data_input, from_Server): #Runs commands that are found if 
             data = " ".join(split_data[1:])
             Run_Command(data, from_Server)
     else:
-        Send(data_input)
+        if from_Server:
+            print(data_input)
+        else:
+            Send(data_input)

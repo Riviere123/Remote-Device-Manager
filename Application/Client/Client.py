@@ -1,7 +1,6 @@
 import ssl, socket, threading
 from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
-# from ServerHelper import Client_Command
 from CommandHandler import Terminal_Command
 import Config
 
