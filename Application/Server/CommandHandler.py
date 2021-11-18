@@ -17,13 +17,13 @@ def Client_Command(client_device, data):
         if command:
             print(f"{command} called from {client_device.name}")
             if command == "set name":
-                Set_Name(client_device, split_data)                               #calls the change name method from the device
+                Set_Name(client_device, split_data)                                   
             elif command == "set type":
-                Set_Type(client_device, split_data)                                    #Set archetype of the Device object of the client 
+                Set_Type(client_device, split_data)                                   
         else:
-            print(f"{client_device.name}: {data}")                                    #For now just print the data strea
+            print(f"{client_device.name}: {data}")                                    
     except:
-        print(f"{client_device.name}: {data}")                                        #For now just print the data stream
+        print(f"{client_device.name}: {data}")                                       
 
 
 ################## Commands called from server ############################

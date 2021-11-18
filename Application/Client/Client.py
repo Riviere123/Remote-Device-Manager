@@ -7,7 +7,7 @@ import Config
 
 ###Connects to the host on the given port
 def Connect(host, port):
-    conn = context.wrap_socket(socket.socket(socket.AF_INET),    #Wrap the socket with TLS
+    conn = context.wrap_socket(socket.socket(socket.AF_INET),       #Wrap the socket with TLS
                                         server_hostname=host)
 
     conn.connect((host, port))
@@ -15,7 +15,7 @@ def Connect(host, port):
 
     print(f"Connected to {host}:{port}")
 
-    Protocol_Send(conn, str(randrange(0,10000)))            #Send the device name TEMPORARILY setting to random number
+    Protocol_Send(conn, str(randrange(0,10000)))                   #Send the device name TEMPORARILY setting to random number
     Protocol_Send(conn, "DeviceArchetype")                         #Sending the device type
 
     return conn                                                    #Returns the connection object
