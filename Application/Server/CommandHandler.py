@@ -29,7 +29,7 @@ def Client_Command(client_device, data):
 ######Formats the data to fit the corresponding command then runs it#######
 
 server_commands=[
-    "send", "list", "ls", "run", 
+    "send", "list", "ls", "run", "delete", 
     "group create", "group list", "group ls", "group add", "group delete", "group remove",
     "group send", "group run"
     ]
@@ -61,6 +61,13 @@ def Server_Command():
                 run_command = " ".join(split_data[0:1] + split_data[2:])
                 device = Device.devices[split_data[1]]
                 Run(device, run_command)
+            except Exception as e:
+                print(e)
+        elif command == "delete":
+            try:
+                device = Device.devices[split_data[1]]
+                print(device)
+                device.Delete_Device()
             except Exception as e:
                 print(e)
         elif command == "group create":

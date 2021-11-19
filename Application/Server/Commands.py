@@ -19,17 +19,23 @@ def Send(device, message):
         Protocol_Send(device.client, message)
     else:
         print(f"{device} is not connected")
+        
 def List():
     [print(f"ID:{i} Name:{Device.devices[i].name} Type:{Device.devices[i].archetype}") for i in Device.devices.keys()]
+
 def Run(device, run_command):
-    print(run_command)
-    Protocol_Send(device.client,run_command)
+    if device.client != None:
+        Protocol_Send(device.client,run_command)
+    else:
+        print(f"{device} is not connected") 
+
 def Group_Create(group_name): 
     if group_name in Group.groups.keys():
         print(f"Group {group_name} already exists.")
     else:
         Group(group_name)
         print(f"Group {group_name} created")
+
 def Group_Add(group, device):
     if device in group.devices:
         print("Device already exists in that group.")
@@ -37,14 +43,17 @@ def Group_Add(group, device):
         group.Add_Device(device)
         device.groups.append(group)
         print(f"Added {device.name} to {group.name}")
+
 def Group_List():
     for group in Group.groups:
         print(f"{group} ##################################")
         for device in Group.groups[group].devices:
             print(f"{group} - {device.id} - {device.name} - {device.archetype}")
+
 def Group_Delete(group_name):
         Group.Group_Delete(group_name)
         print(f"{group_name} deleted")
+
 def Group_Remove(group, device):
     group.Remove_Device(device)
     device.groups.remove(group)
@@ -53,6 +62,7 @@ def Group_Remove(group, device):
 def Group_Send(group, message):
     for device in group.devices:
         Send(device, message)
+
 def Group_Run(group, run_command):
     for device in group.devices:
-        Protocol_Send(device.client,run_command)
+        Run(device,run_command)

@@ -26,11 +26,12 @@ class Device():       #The device object to store device information
 
     ###Changes the devices name and changes the key in the devices dictionary
     def Change_Name(self, new_name):
-        del Device.devices[self.name]
         self.name = new_name
-        Device.devices[new_name] = self
     def Change_Type(self, new_type):
         self.archetype = new_type
+    def Delete_Device(self):
+        self.client.close()
+        del Device.devices[self.id]
 
 class Group():
     groups = {}
