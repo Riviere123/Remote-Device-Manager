@@ -33,10 +33,10 @@ class Device():       #The device object to store device information
         self.client.close()
         del Device.devices[self.id]
 
-class Group():
-    groups = {}
+class Group():                                        #Groups used to logically organize devices
+    groups = {}                                       #When a group is created we store it in the groups dictionary. The key is the group name.
     def __init__(self, name):
-        self.devices = []
+        self.devices = []                             #Store devices in this list to associate it with the group.
         self.name = name
         Group.groups[self.name] = self
     

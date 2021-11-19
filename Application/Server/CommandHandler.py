@@ -1,28 +1,30 @@
 from Commands import *
 
 ################## Commands called from a client ############################
-
-client_commands=[
+########### There are the commands that clients can call ####################
+client_commands=[                                                       #The command names
     "set name", "set type"
     ]
-def Check_For_Client_Command(split_data):
+    
+def Check_For_Client_Command(split_data):                               #Checks for a command in the given list of strings
     for i in range(0,4):
         command = " ".join(split_data[0:i])
         if command in client_commands:
             return command
-def Client_Command(client_device, data):
+
+def Client_Command(client_device, data):                                #Calls the command if a command is found in the data
     split_data = data.lower().split(" ")
-    command = Check_For_Client_Command(split_data)
+    command = Check_For_Client_Command(split_data)                      
     if command:
         print(f"{command} called from {client_device.name}")
         if command == "set name":
             name = split_data[2]
-            Set_Name(client_device, name)                               #calls the change name method from the device
+            Set_Name(client_device, name)                               
         elif command == "set type":
             new_type = split_data[2]     
-            Set_Type(client_device, new_type)                                    #Set archetype of the Device object of the client 
+            Set_Type(client_device, new_type)
     else:
-        print(f"{client_device.name}: {data}")                                    #For now just print the data strea
+        print(f"{client_device.name}: {data}")                              #if no command was found print the data to the server console
 
 
 ################## Commands called from server ############################
