@@ -21,7 +21,7 @@ def Send(device, message):
         print(f"{device} is not connected")
         
 def List():
-    [print(f"ID:{i} Name:{Device.devices[i].name} Type:{Device.devices[i].archetype}") for i in Device.devices.keys()]
+    [print(f"{Device.devices[i]}") for i in Device.devices.keys()]
 
 def Run(device, run_command):
     if device.client != None:
@@ -48,7 +48,7 @@ def Group_List():
     for group in Group.groups:
         print(f"{group} ##################################")
         for device in Group.groups[group].devices:
-            print(f"{group} - {device.id} - {device.name} - {device.archetype}")
+            print(device)
 
 def Group_Delete(group_name):
         Group.Group_Delete(group_name)

@@ -22,7 +22,10 @@ class Device():       #The device object to store device information
         self.id = str(Device.count)
 
     def __repr__(self) -> str:
-        return (f"ID: {self.id} Name: {self.name} archetype: {self.archetype}")
+        connected = "Connected"
+        if self.client == None:
+            connected = "Disconnected"
+        return (f"ID:{self.id} Name:{self.name} archetype:{self.archetype} - {connected}")
 
     ###Changes the devices name and changes the key in the devices dictionary
     def Change_Name(self, new_name):

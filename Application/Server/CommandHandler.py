@@ -5,7 +5,7 @@ from Commands import *
 client_commands=[                                                       #The command names
     "set name", "set type"
     ]
-    
+
 def Check_For_Client_Command(split_data):                               #Checks for a command in the given list of strings
     for i in range(0,4):
         command = " ".join(split_data[0:i])
@@ -35,13 +35,13 @@ server_commands=[
     "group create", "group list", "group ls", "group add", "group delete", "group remove",
     "group send", "group run"
     ]
-def Check_For_Server_Command(split_data):
+def Check_For_Server_Command(split_data):                        #Checks for a command in the given list of strings
     for i in range(4,0,-1):
         command = " ".join(split_data[0:i])
         if command in server_commands:
             return command
 
-def Server_Command():
+def Server_Command():                   #This is our servers terminal and will find and execute commands from user input
     data_input = input("\n")
     split_data = data_input.lower().split(" ")
     command = Check_For_Server_Command(split_data)

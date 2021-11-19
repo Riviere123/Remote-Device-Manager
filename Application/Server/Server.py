@@ -29,7 +29,7 @@ def Deal_With_Client(connstream):
         except:                                       #Client is disconnected
             client_device.client.close()              #Close the clients connection                 
             client_device.client = None               #Set the devices client to None(This is appropriate for seeing if the client is connected or not)
-            print(f"{client_device} Disconnected")    #Print that the client has disconnected
+            print(f"{client_device}")    #Print that the client has disconnected
             break                                     #End the thread
 
 ### Starts the Terminal and allows commands to be entered from the server ###
