@@ -9,9 +9,9 @@ def Set_Name(device, new_name):
     else:                                            
         print(f"{device.name}'s name has been changed to {new_name}")
         device.Change_Name(new_name)
-def Set_Type(client_device, new_type):                       
-    print(f"{client_device.name}'s device type changed to {new_type}")
-    client_device.archetype = new_type
+def Set_Type(device, new_type):                       
+    print(f"{device.name}'s device type changed to {new_type}")
+    device.Change_Type(new_type)
 
 ################## Commands called from server ############################
 def Send(device, message):
@@ -32,15 +32,19 @@ def Group_Add(group, device):
         print("Device already exists in that group.")
     else:
         group.Add_Device(device)
-        device.group = group
+        device.groups.append(group)
         print(f"Added {device.name} to {group.name}")
 def Group_List():
-    print(Group.groups)
+    for group in Group.groups:
+        print(f"{group} ##################################")
+        for device in Group.groups[group].devices:
+            print(f"{group} - {device.id} - {device.name} - {device.archetype}")
 def Group_Delete(group_name):
         Group.Group_Delete(group_name)
         print(f"{group_name} deleted")
 def Group_Remove(group, device):
     group.Remove_Device(device)
+    device.groups.remove(group)
     print(f"{device.name} removed from {group.name}")
 
 def Group_Send(group, message):

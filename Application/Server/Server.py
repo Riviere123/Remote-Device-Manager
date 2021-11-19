@@ -1,5 +1,5 @@
 import socket, ssl, threading
-from Device import Device
+from Device import Device, Group
 from DataFormatter import Protocol_Send, Protocol_Receive
 from CommandHandler import Client_Command, Server_Command
 import Config
@@ -12,6 +12,10 @@ def Deal_With_Client(connstream):
             data = Protocol_Receive(connstream)                                      #data = Recieved data
             Client_Command(client_device, data)                                      #Checks the command and reacts accordingly.
         except:
+            ###For now just remove client device from our list of devices and from all groups.
+            Device.devices.pop(client_device.id)
+            for group in client_device.groups:
+                group.devices.remove(client_device)
             print(f"{connstream} Disconnected")                                      #Client disconnected  
             break
 
