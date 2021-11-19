@@ -26,4 +26,4 @@ def Terminal_Command(data_input, from_Server): #Runs commands that are found if 
         if from_Server:
             print(data_input)
         else:
-            Send(data_input)
+            Send(f"Server: {data_input}")
