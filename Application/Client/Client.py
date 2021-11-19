@@ -17,8 +17,10 @@ def Connect(host, port):
 
     print(f"Connected to {host}:{port}")
 
-    Protocol_Send(connection, device.name)                                                  #Send the device name TEMPORARILY setting to random number
-    Protocol_Send(connection, device.archetype)                                             #Sending the device type
+    device_setup_message = f"{device.name} {device.archetype} {device.id}"
+    Protocol_Send(connection, device_setup_message)                                         #Send the device setup message
+    Device.this_device.id=Protocol_Receive(connection)                                      #Receieve and set the id
+
     receive_thread = threading.Thread(target=Receive_Data, args=(connection,))              #Starting thread to recieve data
     receive_thread.start()
 

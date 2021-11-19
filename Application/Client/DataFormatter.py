@@ -17,5 +17,5 @@ def Protocol_Send(connection, message):
 
         connection.send(length.encode('ascii'))           #Send the length of the next data block
         connection.send(message)                          #Send the datablock
-    except:
-        print("There was an error sending data from Protocol_Send within DataFormatter. You may have used unsupported special characters")
+    except Exception as e:
+        print(e)

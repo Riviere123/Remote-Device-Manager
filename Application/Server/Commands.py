@@ -15,7 +15,10 @@ def Set_Type(device, new_type):
 
 ################## Commands called from server ############################
 def Send(device, message):
-    Protocol_Send(device.client, message)
+    if device.client != None:
+        Protocol_Send(device.client, message)
+    else:
+        print(f"{device} is not connected")
 def List():
     [print(f"ID:{i} Name:{Device.devices[i].name} Type:{Device.devices[i].archetype}") for i in Device.devices.keys()]
 def Run(device, run_command):
@@ -49,7 +52,7 @@ def Group_Remove(group, device):
 
 def Group_Send(group, message):
     for device in group.devices:
-        Protocol_Send(device.client, message)
+        Send(device, message)
 def Group_Run(group, run_command):
     for device in group.devices:
         Protocol_Send(device.client,run_command)

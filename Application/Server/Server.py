@@ -3,19 +3,35 @@ from Device import Device, Group
 from DataFormatter import Protocol_Send, Protocol_Receive
 from CommandHandler import Client_Command, Server_Command
 import Config
+    
 
 ### Each client will have there own Deal_With_Client Thread ##
 def Deal_With_Client(connstream):
-    client_device = Device(connstream, Protocol_Receive(connstream), Protocol_Receive(connstream)) #Set the client_device to a newly created Device object.
+    device_setup_message = Protocol_Receive(connstream).split(" ")
+    device_name = device_setup_message[0]
+    device_archetype = device_setup_message[1]
+    device_id = device_setup_message[2]
+
+    if device_id in Device.devices.keys():
+        client_device = Device.devices[device_id]
+        client_device.name = device_name
+        client_device.archetype = device_archetype
+        client_device.client = connstream
+        Protocol_Send(connstream, client_device.id)
+    else:
+        client_device = Device(connstream, device_name, device_archetype, device_id) #Set the client_device to a newly created Device object.
+        Protocol_Send(connstream, client_device.id)
+
     while True:                                                                                    #Set device name and archetype with first 2 recieved data
         try:
             data = Protocol_Receive(connstream)                                      #data = Recieved data
             Client_Command(client_device, data)                                      #Checks the command and reacts accordingly.
         except:
-            ###For now just remove client device from our list of devices and from all groups.
-            Device.devices.pop(client_device.id)
-            for group in client_device.groups:
-                group.devices.remove(client_device)
+            # ###For now just remove client device from our list of devices and from all groups.
+            # Device.devices.pop(client_device.id)
+            # for group in client_device.groups:
+            #     group.devices.remove(client_device)
+            client_device.client = None
             print(f"{connstream} Disconnected")                                      #Client disconnected  
             break
 
