@@ -1,8 +1,9 @@
 import socket, ssl, threading
 from Device import Device
 from DataFormatter import Protocol_Send, Protocol_Receive
-from Commands import CLI_Command_Handler
+from Commands.CLI_Command_Handler import CLI_Command_Handler
 import Config
+
     
 
 ### Each client will have their own Deal_With_Client Thread ##@
@@ -45,7 +46,7 @@ def Start_Server(host, port):
     bindsocket = socket.socket()                                                          
     bindsocket.bind((host, port))                                                         #binding the socket and port
     bindsocket.listen()                                                                   #listening on that port
-    
+
     terminal_thread = threading.Thread(target=Terminal)                                   #Create the terminal thread
     terminal_thread.start()                                                               #Start terminal thread
     print("Listening for connections... \n")
@@ -57,10 +58,11 @@ def Start_Server(host, port):
             print(f"Device connected from {addr}")
             thread = threading.Thread(target=Deal_With_Client, args=(connstream,))          #Creating a thread for each client                                                            
             thread.start()                                                                  #Starting the thread, each connection will start a new thread 
-        except:
-            print("Connection failed.")
-
+        except Exception as e:
+            print(f"{e} Connection failed.")
 
 if __name__ == "__main__":
     server_thread = threading.Thread(target=Start_Server, args=(Config.IP_ADDRESS, Config.PORT))        #Start the server
     server_thread.start()
+    from Flask_Wrapper import flask_server
+    flask_server.run(debug=False, port=8000)

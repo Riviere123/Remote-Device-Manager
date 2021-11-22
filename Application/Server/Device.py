@@ -1,5 +1,3 @@
-from typing import Counter
-
 class Device():       #The device object to store device information
     devices = {}      #List of all devices created
     count = 0
