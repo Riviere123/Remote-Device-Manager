@@ -1,6 +1,5 @@
 from typing import Counter
 
-
 class Device():       #The device object to store device information
     devices = {}      #List of all devices created
     count = 0
@@ -33,7 +32,8 @@ class Device():       #The device object to store device information
     def Change_Type(self, new_type):
         self.archetype = new_type
     def Delete_Device(self):
-        self.client.close()
+        if self.client != None:
+            self.client.close()
         del Device.devices[self.id]
 
 class Group():                                        #Groups used to logically organize devices

@@ -1,6 +1,8 @@
 from Device import Device, Group
 from DataFormatter import Protocol_Receive, Protocol_Send
 
+#TODO Decouple command logic from how inputs and outputs are interpreted.
+
 ################## Commands called from a client ############################
 def Set_Name(device, new_name):
     if new_name in Device.devices.keys():

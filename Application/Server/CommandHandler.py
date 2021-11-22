@@ -11,7 +11,8 @@ def Check_For_Client_Command(split_data):                               #Checks 
         command = " ".join(split_data[0:i])
         if command in client_commands:
             return command
-
+#TODO figure out how to give the user feedback if the command was not formatted properly
+#TODO Command class returns command object when calling the command
 def Client_Command(client_device, data):                                #Calls the command if a command is found in the data
     split_data = data.lower().split(" ")
     command = Check_For_Client_Command(split_data)                      
@@ -45,6 +46,10 @@ def Server_Command():                   #This is our servers terminal and will f
     data_input = input("\n")
     split_data = data_input.lower().split(" ")
     command = Check_For_Server_Command(split_data)
+    #TODO Turn all the command and command handlers into one class
+    #TODO Redundant if statemet should be in CLI context
+    #TODO Context for API
+    #TODO MAKE CLASSES YOU FOOL!
     if command in server_commands:                                                                                                  
         if command == "send":
             try:

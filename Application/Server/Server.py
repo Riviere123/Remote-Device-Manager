@@ -12,6 +12,7 @@ def Deal_With_Client(connstream):
     device_archetype = device_setup_message[1]                            #Archetype
     device_id = device_setup_message[2]                                   #Id
 
+    #TODO ADD SECURITY FOR NEW DEVICES TO AVOID SPOOFING
     if device_id in Device.devices.keys():                                #If that device has connected before based on there id
         client_device = Device.devices[device_id]                         #Set the device to the existing device
         client_device.name = device_name                                  #Set the device name to clients devices name

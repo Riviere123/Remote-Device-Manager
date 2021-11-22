@@ -21,6 +21,7 @@ def Self():
     print(Device.this_device)
 
 #Run a terminal command on this device
+#TODO pip error message to the server
 def Run_Command(data, from_server):
     stream = os.popen(data)
     output = stream.read()
