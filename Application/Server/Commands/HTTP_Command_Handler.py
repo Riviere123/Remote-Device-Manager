@@ -11,6 +11,8 @@ class HTTP_Command_Handler():
         if(command != ""):
             command = command.lower().split('_')
             length,command = Command_Handler.Check_For_Server_Command(command)
+            if command == None:
+                return("Invalid Command")
             argument1 = [argument1.lower()]
             argument2 = argument2.lower().split("_")
             arguments = argument1 + argument2
