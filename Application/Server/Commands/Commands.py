@@ -35,6 +35,7 @@ class Command():
     def Run(device, run_command):
         if device.client != None:
             Protocol_Send(device.client,run_command)
+            return("Run Command Sent")
         else:
             return(f"{device} is not connected") 
     def Group_Create(group_name): 
