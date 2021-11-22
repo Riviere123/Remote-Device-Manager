@@ -79,7 +79,7 @@ class Command_Handler():
             if command in Command_Handler.server_commands.keys():
                 return Command_Handler.server_commands[command]
 
-class CLI_Command_Handler(Command_Handler):
+class CLI_Command_Handler():
     def Client_Command(client_device, data):                                #Calls the command if a command is found in the data
         split_data = data.lower().split(" ")
         command = Command_Handler.Check_For_Client_Command(split_data)                      
@@ -93,8 +93,6 @@ class CLI_Command_Handler(Command_Handler):
                 print(Command.Set_Type(client_device, new_type))
         else:
             print(f"{client_device.name}: {data}")                              #if no command was found print the data to the server console
-
-
 
     def Server_Command():                                                       #This is our servers terminal and will find and execute commands from user input
         data_input = input("\n")
@@ -117,7 +115,7 @@ class CLI_Command_Handler(Command_Handler):
             try:
                 run_command = " ".join(split_data[0:1] + split_data[2:])
                 device = Device.devices[split_data[1]]
-                print(command(device, run_command))
+                command(device, run_command)
             except Exception as e:
                 print(f"Error: {e} The device ID was not found or the format was not correct.\nCorrect format Run (Device id) (Terminal Command).")
 
@@ -179,7 +177,7 @@ class CLI_Command_Handler(Command_Handler):
                 group_name = split_data[2]
                 group = Group.groups[group_name]
                 run_command = "run " + " ".join(split_data[3:])
-                print(command(group, run_command))
+                command(group, run_command)
             except Exception as e:
                 print(f"Error: {e} The device id was not found or the group name was not found.\nCorrect format Group Run (Group) (Terminal Command).")
 

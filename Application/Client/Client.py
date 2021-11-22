@@ -1,7 +1,7 @@
 import ssl, socket, threading
 from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
-from CommandHandler import Terminal_Command
+from Commands import CLI_Command_Handler
 import Config
 
 #Connects to the server on given ip/port and creates send thread. We also send initial data to the server (Name/type)
@@ -33,7 +33,7 @@ def Receive_Data(connection):
     while connected:                                  #If we have an active connection
         try:
             message = Protocol_Receive(connection)    #Recieve message from server
-            Terminal_Command(message,True)            #Checks for commands if no command is found prints to console.
+            CLI_Command_Handler.Terminal_Command(message,True)            #Checks for commands if no command is found prints to console.
         except:                                             
             print("Connection to host lost.")         #If no more data is flowing, we have disconnected from the server
             connected = False                         #Set connected to false
@@ -43,7 +43,7 @@ def Terminal():
     while True:                                                                                                                                                      
         try:
             data_input = input("\n")
-            Terminal_Command(data_input, False)
+            CLI_Command_Handler.Terminal_Command(data_input, False)
         except Exception as e:
             print(e)
 

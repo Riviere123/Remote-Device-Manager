@@ -1,5 +1,5 @@
 import socket, ssl, threading
-from Device import Device, Group
+from Device import Device
 from DataFormatter import Protocol_Send, Protocol_Receive
 from Commands import CLI_Command_Handler
 import Config
