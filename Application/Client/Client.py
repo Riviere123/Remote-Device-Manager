@@ -1,7 +1,7 @@
 import ssl, socket, threading
 from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
-from CommandHandler import Terminal_Command
+from Commands import CLI_Command_Handler
 import Config
 
 #Connects to the server on given ip/port and creates send thread. We also send initial data to the server (Name/type)
@@ -12,13 +12,16 @@ def Connect(host, port):
     connection = context.wrap_socket(socket.socket(socket.AF_INET),           #Wrap the socket with TLS
                                     server_hostname=host)
 
-    connection.connect((host, port))
+    connection.connect((host, port))                                          #Connect to the server
 
     print(f"Connected to {host}:{port}")
 
-    Protocol_Send(connection, device.name)                                                  #Send the device name TEMPORARILY setting to random number
-    Protocol_Send(connection, device.archetype)                                             #Sending the device type
-    receive_thread = threading.Thread(target=Receive_Data, args=(connection,))              #Starting thread to recieve data
+    device_setup_message = f"{device.name} {device.archetype} {device.id}"                  #Create the setup message
+    Protocol_Send(connection, device_setup_message)                                         #Send the device setup message
+
+    Device.this_device.id=Protocol_Receive(connection)                                      #Receieve and set the id. If the device id was anything but -1 you will recieve the same id as you had sent.
+
+    receive_thread = threading.Thread(target=Receive_Data, args=(connection,))              #Create and start a thread to recieve data
     receive_thread.start()
 
     return connection                                                                       #Returns the connection object
@@ -27,38 +30,38 @@ def Connect(host, port):
 ###Receives data from the given connection and runs it against client_command from serverhelper
 def Receive_Data(connection):
     global connected
-    while connected:
+    while connected:                                  #If we have an active connection
         try:
             message = Protocol_Receive(connection)    #Recieve message from server
-            Terminal_Command(message,True)       #Checks for commands if no command is found prints to console.
+            CLI_Command_Handler.Terminal_Command(message,True)            #Checks for commands if no command is found prints to console.
         except:                                             
             print("Connection to host lost.")         #If no more data is flowing, we have disconnected from the server
-            connected = False
+            connected = False                         #Set connected to false
 
-###The terminal for hte client to enter commands and send data to server from
+###The terminal for the client to enter commands and send data to server from
 def Terminal(): 
     while True:                                                                                                                                                      
         try:
             data_input = input("\n")
-            Terminal_Command(data_input, False)
+            CLI_Command_Handler.Terminal_Command(data_input, False)
         except Exception as e:
             print(e)
 
 
 #PRE UI FUNCTIONALITY
 if __name__ == "__main__":
-    name = input("Name your device: ").lower()              
-    archetype = input("Give your device a type: ").lower()
-    device = Device(name, archetype)
-    connected = False
-    terminal_thread = threading.Thread(target=Terminal)
+    name = input("Name your device: ").lower()                  #set our name
+    archetype = input("Give your device a type: ").lower()      #set our archetype
+    device = Device(name, archetype)                            #create our device object
+    connected = False                                           #Initialize connected bool
+    terminal_thread = threading.Thread(target=Terminal)         #Create and start the terminal thread
     terminal_thread.start()
     while True:
-        if connected == False:
-            try:
+        if connected == False:                                                 #If we are not connected.
+            try:                                                               #Constantly try to reconnect to the server
                 connected = True
                 connection = Connect(Config.SERVER_IP, Config.SERVER_PORT)
                 device.server = connection
-            except:
+            except:                                                            #If we fail to connect set connected to false so we try again
                 connected = False
                 print("Failed to connect. Trying again...")

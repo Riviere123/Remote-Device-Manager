@@ -138,21 +138,21 @@ These are commands that the client can send to the server.
 <b>-Server Commands-</b>
 These are commands you can run from the server
 
-1. send (device name) (message) | Sends a message to the desired client
+1. send (device id) (message) | Sends a message to the desired client
 
 2. list or ls | lists all connected devices
 
-3. run (device name) (message) | send a terminal command to the client and returns the results to the server
+3. run (device id) (message) | send a terminal command to the client and returns the results to the server
 
 4. group create (group name) | Creates a group
 
 5. group list or group ls | lists the groups and clients belonging to those groups
 
-6. group add (group name) (device name) | adds the device to the group
+6. group add (group name) (device id) | adds the device to the group
 
 7. group delete (group name) | deletes the group
 
-8. group remove (group name) (device name) | removes the device from the group
+8. group remove (group name) (device id) | removes the device from the group
 
 9. group send (group name) (message) | Broadcasts the message to all devices in the group
 

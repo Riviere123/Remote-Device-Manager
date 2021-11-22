@@ -8,12 +8,9 @@ def Protocol_Send(connection, message):
     try:
         if message == "":
             return
-        if type(message) == str:                      #make sure our message is a string
-            message = message.encode('ascii')         #Encode the string 
-            length = str(len(message)).zfill(4)       #Get the length of the string and make the number 4 digits regardless
-
-        else:                                         #If the message is already encoded(which it should not be)
-            length = str(len(message)).zfill(4)
+        if type(message) == str:                          #make sure our message is a string
+            message = message.encode('ascii')             #Encode the string 
+            length = str(len(message)).zfill(4)           #Get the length of the string and make the number 4 digits regardless
 
         connection.send(length.encode('ascii'))           #Send the length of the next data block
         connection.send(message)                          #Send the datablock
