@@ -1,7 +1,7 @@
 import socket, ssl, threading
 from Device import Device, Group
 from DataFormatter import Protocol_Send, Protocol_Receive
-from CommandHandler import Client_Command, Server_Command
+from Commands import CLI_Command_Handler
 import Config
     
 
@@ -26,7 +26,7 @@ def Deal_With_Client(connstream):
     while True:
         try:
             data = Protocol_Receive(connstream)       #data = any messages from the client
-            Client_Command(client_device, data)       #Checks if there is any commands in the message and reacts accordingly
+            CLI_Command_Handler.Client_Command(client_device, data)       #Checks if there is any commands in the message and reacts accordingly
         except:                                       #Client is disconnected
             client_device.client.close()              #Close the clients connection                 
             client_device.client = None               #Set the devices client to None(This is appropriate for seeing if the client is connected or not)
@@ -34,9 +34,9 @@ def Deal_With_Client(connstream):
             break                                     #End the thread
 
 ### Starts the Terminal and allows commands to be entered from the server ###
-def Terminal():                                                                                                                                                      
+def Terminal():                                                                                                                                                     
     while True:                         
-        Server_Command()                                                                                                                             
+        CLI_Command_Handler.Server_Command()                                                                                                                             
 
 #starts the server with the provided IP and Port
 def Start_Server(host, port):
