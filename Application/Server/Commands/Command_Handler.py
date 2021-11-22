@@ -15,12 +15,14 @@ class Command_Handler():
             if command in Command_Handler.client_commands.keys():
                 return (i,Command_Handler.client_commands[command])
         return (None,None)
+        
     def Check_For_Server_Command(split_data):                               #Checks for a command in the given list of strings
         for i in range(4,0,-1):
             command = " ".join(split_data[0:i])
             if command in Command_Handler.server_commands.keys():
                 return (i,Command_Handler.server_commands[command])
         return (None,None)
+
     def Process_Command(called_command, arguments):
         if called_command == Command.Send:
             try:
@@ -98,4 +100,17 @@ class Command_Handler():
                 return(called_command(group, run_command))   
             except Exception as e:
                 return(f"Error: {e} The device id was not found or the group name was not found.\nCorrect format Group Run (Group) (Terminal Command).")
- 
+        elif called_command == Command.Set_Type:
+            try:
+                device = arguments[0]
+                type = arguments[1]
+                return Command.Set_Type(device, type)
+            except Exception as e:
+                return(e)
+        elif called_command == Command.Set_Name:
+            try:
+                device = arguments[0]
+                name = arguments[1]
+                return Command.Set_Name(device, name)
+            except Exception as e:
+                return(e)

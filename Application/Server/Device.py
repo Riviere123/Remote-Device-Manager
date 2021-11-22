@@ -11,8 +11,6 @@ class Device():       #The device object to store device information
             self.id = id
         Device.devices[self.id] = (self)       #Adds the device to the devices dictionary
         self.groups = []
-        
-
 
     def Asign_Id(self):
         Device.count += 1
