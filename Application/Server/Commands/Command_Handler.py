@@ -7,7 +7,7 @@ class Command_Handler():
     server_commands={
         "send":Command.Send, "list":Command.List, "ls":Command.List, "run":Command.Run, "delete":Command.Delete,
         "group create":Command.Group_Create, "group list":Command.Group_List, "group ls":Command.Group_List, "group add":Command.Group_Add,
-        "group delete":Command.Group_Delete, "group remove":Command.Group_Remove, "group send":Command.Group_Send, "group run": Command.Group_Run
+        "group delete":Command.Group_Delete, "group remove":Command.Group_Remove, "group send":Command.Group_Send, "group run": Command.Group_Run, 
         }
     def Check_For_Client_Command(split_data):                               #Checks for a command in the given list of strings
         for i in range(0,4):
@@ -104,13 +104,13 @@ class Command_Handler():
             try:
                 device = arguments[0]
                 type = arguments[1]
-                return Command.Set_Type(device, type)
+                return called_command(device, type)
             except Exception as e:
                 return(e)
         elif called_command == Command.Set_Name:
             try:
                 device = arguments[0]
                 name = arguments[1]
-                return Command.Set_Name(device, name)
+                return called_command(device, name)
             except Exception as e:
                 return(e)

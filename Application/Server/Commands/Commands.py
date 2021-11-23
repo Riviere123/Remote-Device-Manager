@@ -18,48 +18,59 @@ class Command():
     def Send(device, message):
         if device.client != None:
             Protocol_Send(device.client, message)
-            return("Message sent")
+            return({"message":"Message sent"})
         else:
-            return(f"{device} is not connected") 
+            return({"error":f"{device} is not connected"}) 
     def List():
-        output = {}
-        lst = Device.devices
-        for x in lst:
+        payload = []
+        for id in Device.devices.keys():
+            device = Device.devices[id]
             connected = "Connected"
-            if lst[x].client == None:
+            if device.client == None:
                 connected = "Disconnected"
-            output[x] = {"name":lst[x].name, "type":lst[x].archetype, "status":connected}
-        return(output)
+            payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected})
+        return(payload)
     def Delete(device):
         device.Delete_Device()
+        return({"message":f"{device} was deleted."})
     def Run(device, run_command):
         if device.client != None:
             Protocol_Send(device.client,run_command)
-            return("Run Command Sent")
+            return({"message":"Run Command Sent"})
         else:
-            return(f"{device} is not connected") 
+            return({"message":f"{device} is not connected"}) 
     def Group_Create(group_name): 
         if group_name in Group.groups.keys():
-            return(f"Group {group_name} already exists.")
+            return({"message":f"Group {group_name} already exists."})
         else:
             Group(group_name)
-            return(f"Group {group_name} created")
+            return({"message":f"Group {group_name} created"})
     def Group_Add(group, device):
         if device in group.devices:
-            return("Device already exists in that group.")
+            return({"message":"Device already exists in that group."})
         else:
             group.Add_Device(device)
             device.groups.append(group)
-            return(f"Added {device.name} to {group.name}")
+            return({'message':f"Added {device.name} to {group.name}"})
     def Group_List():
-        return (Group.groups)
+        payload = {}
+        for group in Group.groups:
+            payload_devices = []
+            for device in Group.groups[group].devices:
+                connected = "Connected"
+                if device.client == None:
+                    connected = "Disconnected"
+                payload_devices.append({"name":device.name, "type":device.archetype, "status":connected})
+            payload[group] = payload_devices
+        return (payload)
+
     def Group_Delete(group_name):
         Group.Group_Delete(group_name)
-        return(f"{group_name} deleted")
+        return({'message':f"{group_name} deleted"})
     def Group_Remove(group, device):
         group.Remove_Device(device)
         device.groups.remove(group)
-        return(f"{device.name} removed from {group.name}")
+        return({'message':f"{device.name} removed from {group.name}"})
     def Group_Send(group, message):
         for device in group.devices:
             Command.Send(device, message)
