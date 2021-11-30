@@ -1,0 +1,379 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "Device Management System",
+        "version": "0.1.0",
+        "title": "Device Management System",
+        "contact":{
+            "email": "Curtis.Redgate@Gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "tags": [
+        {
+            "name": "devices",
+            "description": "Example API calls for /device"
+        },
+        {
+            "name": "groups",
+            "description": "Example API calls for /group"
+        },
+        {
+            "name": "/devices/{id}",
+            "description": "Example API calls for /device/{id}"
+        },
+        {
+            "name": "groups/{group_name}",
+            "description": "Example API calls for /group/{group_name}"
+        }
+    ],
+    "paths": {
+        "/devices": {
+            "get": {
+                "tags": [
+                    "devices"
+                ],
+                "summary": "Returns a list of device objects",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/deviceRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{id}": {
+            "get": {
+                "tags": [
+                    "/devices/{id}"
+                ],
+                "summary": "Returns the device object",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id of the device",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/deviceRequest"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "/devices/{id}"
+                ],
+                "summary": "Removes and disconnects the chosen device.",
+                "parameters":[
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id of the device",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/deviceDelete"
+                        }
+                    },
+                    "500":{
+                        "description": "No device with the provided id was found."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "/devices/{id}"
+                ],
+                "summary": "Runs the given terminal command on the machine",
+                "parameters":[
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id of the device",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The command to run on the clients terminal",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/devicePostBody"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "OK",
+                        "Schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/groups": {
+            "get": {
+                "tags": [
+                    "groups"
+                ],
+                "summary": "Returns a dictionary of groups with a list value of device objects",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/groupRequest"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "groups"
+                ],
+                "summary": "Create a new group with the given name.",
+                "requestBody": {
+                    "description": "Create the group with the given name",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/groupPostBody"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "OK",
+                        "Schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/{group_name}": {
+            "get": {
+                "tags": [
+                    "groups/{group_name}"
+                ],
+                "summary": "Returns a list of devices in that group.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "group_name",
+                        "required": true,
+                        "description": "name of the group",
+                        "schema": {
+                            "$ref": "#/components/schemas/group"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/groupRequest"
+                        }
+                    },
+                    "500": {
+                        "description": "Group name doesn't exist"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "groups/{group_name}"
+                ],
+                "summary": "Adds the provided device to the group",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "group_name",
+                        "required": true,
+                        "description": "name of the group",
+                        "schema": {
+                            "$ref": "#/components/schemas/group"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Adds the provided device to the group",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/deviceIDPostBody"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "OK",
+                        "Schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "groups/{group_name}"
+                ],
+                "summary": "Deletes the group.",
+                "parameters":[
+                    {
+                        "in": "path",
+                        "name": "group_name",
+                        "required": true,
+                        "description": "Name of the group",
+                        "schema": {
+                            "$ref": "#/components/schemas/group"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    },
+                    "500":{
+                        "description": "No group with the given name was found."
+                    }
+                }
+            } 
+        }
+    },
+    "components": {
+        "schemas": {
+            "group":{
+                "type": "string",
+                "format": "string"
+            },
+            "id":{
+                "type": "string",
+                "format": "string"
+            },
+            "deviceRequest": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "name": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "groupRequest": {
+                "type": "object",
+                "properties": {
+                    "group_name": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "format": "string"
+                            },
+                            "name": {
+                                "type": "string",
+                                "format": "string"
+                            },
+                            "status": {
+                                "type": "string",
+                                "format": "string"
+                            },
+                            "type": {
+                                "type": "string",
+                                "format": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "genericMessage": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "groupPostBody": {
+                "type": "object",
+                "properties": {
+                    "group name": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            }
+            ,
+            "devicePostBody": {
+                "type": "object",
+                "properties": {
+                    "command": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "deviceIDPostBody": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            }
+        }
+    }
+    
+}

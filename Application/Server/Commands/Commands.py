@@ -32,14 +32,15 @@ class Command():
         return(payload)
     def Delete(device):
         device.Delete_Device()
-        return({"message":f"{device} was deleted."})
+        return({"message":f"{device.name} was deleted."})
     def Run(device, run_command):
         if device.client != None:
             Protocol_Send(device.client,run_command)
             return({"message":"Run Command Sent"})
         else:
             return({"message":f"{device} is not connected"}) 
-    def Group_Create(group_name): 
+    def Group_Create(group_name):
+        group_name = group_name.lower() 
         if group_name in Group.groups.keys():
             return({"message":f"Group {group_name} already exists."})
         else:
@@ -60,7 +61,7 @@ class Command():
                 connected = "Connected"
                 if device.client == None:
                     connected = "Disconnected"
-                payload_devices.append({"name":device.name, "type":device.archetype, "status":connected})
+                payload_devices.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected})
             payload[group] = payload_devices
         return (payload)
 
@@ -77,4 +78,19 @@ class Command():
     def Group_Run(group, run_command):
         for device in group.devices:
             Command.Run(device,run_command)
-        
+#### HTTP HELPER COMMANDS
+    def Get_Device_By_ID(id):
+        device = Device.devices[id]
+        connected = "Connected"
+        if device.client == None:
+            connected = "Disconnected"
+        return({"id":device.id, "name":device.name, "type":device.archetype, "status":connected})
+    def Get_Group_By_Name(group_name):
+        group = Group.groups[group_name.lower()]
+        payload_devices = []
+        for device in group.devices:
+            connected = "Connected"
+            if device.client == None:
+                connected = "Disconnected"
+            payload_devices.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected})
+        return(payload_devices)
