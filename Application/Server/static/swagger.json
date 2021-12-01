@@ -19,11 +19,11 @@
     ],
     "tags": [
         {
-            "name": "devices",
+            "name": "/devices",
             "description": "Example API calls for /device"
         },
         {
-            "name": "groups",
+            "name": "/groups",
             "description": "Example API calls for /group"
         },
         {
@@ -31,7 +31,11 @@
             "description": "Example API calls for /device/{id}"
         },
         {
-            "name": "groups/{group_name}",
+            "name": "/devices/{id}/commands"
+        }
+        ,
+        {
+            "name": "/groups/{group_name}",
             "description": "Example API calls for /group/{group_name}"
         }
     ],
@@ -39,7 +43,7 @@
         "/devices": {
             "get": {
                 "tags": [
-                    "devices"
+                    "/devices"
                 ],
                 "summary": "Returns a list of device objects",
                 "responses": {
@@ -105,48 +109,12 @@
                         "description": "No device with the provided id was found."
                     }
                 }
-            },
-            "post": {
-                "tags": [
-                    "/devices/{id}"
-                ],
-                "summary": "Runs the given terminal command on the machine",
-                "parameters":[
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "description": "id of the device",
-                        "schema": {
-                            "$ref": "#/components/schemas/id"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "The command to run on the clients terminal",
-                    "required": true,
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref": "#components/schemas/devicePostBody"
-                            }
-                        }
-                    }
-                },
-                "responses":{
-                    "200": {
-                        "description": "OK",
-                        "Schema":{
-                            "$ref": "#/components/schemas/genericMessage"
-                        }
-                    }
-                }
             }
         },
         "/groups": {
             "get": {
                 "tags": [
-                    "groups"
+                    "/groups"
                 ],
                 "summary": "Returns a dictionary of groups with a list value of device objects",
                 "responses": {
@@ -160,7 +128,7 @@
             },
             "post": {
                 "tags": [
-                    "groups"
+                    "/groups"
                 ],
                 "summary": "Create a new group with the given name.",
                 "requestBody": {
@@ -182,12 +150,40 @@
                         }
                     }
                 }
-            }
+            },
+            "delete": {
+                "tags": [
+                    "/groups"
+                ],
+                "summary": "Deletes the group and removes all devices from the group.",
+                "requestBody": {
+                    "description": "Deletes the provided group",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/groupPostBody"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    },
+                    "500":{
+                        "description": "No group with the given name was found."
+                    }
+                }
+            } 
         },
         "/groups/{group_name}": {
             "get": {
                 "tags": [
-                    "groups/{group_name}"
+                    "/groups/{group_name}"
                 ],
                 "summary": "Returns a list of devices in that group.",
                 "parameters": [
@@ -215,7 +211,7 @@
             },
             "post": {
                 "tags": [
-                    "groups/{group_name}"
+                    "/groups/{group_name}"
                 ],
                 "summary": "Adds the provided device to the group",
                 "parameters": [
@@ -251,9 +247,20 @@
             },
             "delete": {
                 "tags": [
-                    "groups/{group_name}"
+                    "/groups/{group_name}"
                 ],
-                "summary": "Deletes the group.",
+                "summary": "Removes device from the group.",
+                "requestBody": {
+                    "description": "Removes the device with the given id",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/groupRemoveBody"
+                            }
+                        }
+                    }
+                },
                 "parameters":[
                     {
                         "in": "path",
@@ -277,6 +284,120 @@
                     }
                 }
             } 
+        },
+        "/devices/{id}/run":{
+            "post": {
+                "tags": [
+                    "/devices/{id}/commands"
+                ],
+                "summary": "Runs the given terminal command on the device.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id of the device",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Runs the command on the provided device",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/runCommandPostBody"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "OK",
+                        "Schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{id}/name":{
+            "post": {
+                "tags": [
+                    "/devices/{id}/commands"
+                ],
+                "summary": "Changes the name of the device.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id of the device",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Changes the name of the device",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/nameCommandPostBody"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "OK",
+                        "Schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{id}/type":{
+            "post": {
+                "tags": [
+                    "/devices/{id}/commands"
+                ],
+                "summary": "Changes the type of the device.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id of the device",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Changes the type of the device",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/typeCommandPostBody"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "OK",
+                        "Schema":{
+                            "$ref": "#/components/schemas/genericMessage"
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -292,6 +413,13 @@
             "deviceRequest": {
                 "type": "object",
                 "properties": {
+                    "groups":{
+                        "type": "list",
+                        "properties":{
+                            "type": "string",
+                            "format": "string"
+                        }
+                    },
                     "id": {
                         "type": "string",
                         "format": "string"
@@ -348,7 +476,7 @@
             "groupPostBody": {
                 "type": "object",
                 "properties": {
-                    "group name": {
+                    "group": {
                         "type": "string",
                         "format": "string"
                     }
@@ -372,7 +500,45 @@
                         "format": "string"
                     }
                 }
+            },
+            "runCommandPostBody": {
+                "type": "object",
+                "properties": {
+                    "command": {
+                        "type" : "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "nameCommandPostBody": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "typeCommandPostBody": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
+            },
+            "groupRemoveBody": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "string"
+                    }
+                }
             }
+
+
         }
     }
     

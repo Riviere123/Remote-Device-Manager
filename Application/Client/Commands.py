@@ -8,14 +8,16 @@ class Command():
         Protocol_Send(Device.this_device.server, message)
 
     #Sets our device name locally and on the server
-    def Set_Name(name):      
+    def Set_Name(name, from_server):      
         Device.this_device.name = name
-        Protocol_Send(Device.this_device.server, f"set name {name}" )
+        if not from_server:
+            Protocol_Send(Device.this_device.server, f"set name {name}" )
 
     #Sets the device type locally and on the server
-    def Set_Type(archetype): 
+    def Set_Type(archetype, from_server): 
         Device.this_device.archetype = archetype
-        Protocol_Send(Device.this_device.server, f"set type {archetype}")
+        if not from_server:
+            Protocol_Send(Device.this_device.server, f"set type {archetype}")
 
     #Get info about this device
     def Self():              
@@ -27,7 +29,7 @@ class Command():
         stream = os.popen(data)
         output = stream.read()
         if from_server:                                        #If the command was from the server send the output to the server
-            Protocol_Send(Device.this_device.server, output)
+            Protocol_Send(Device.this_device.server,"run output " + output)
             return(f"{data} called from Server")
         else:                                                  #otherwise just print to the console
             return output
@@ -48,10 +50,10 @@ class CLI_Command_Handler():
         command = Command_Handler.Check_For_Command(split_data)     #Check the data for any commands
         if command == Command.Set_Name:
             name = split_data[2]
-            command(name)
+            command(name, from_Server)
         elif command == Command.Set_Type:
             archetype = split_data[2]
-            command(archetype)
+            command(archetype, from_Server)
         elif command == Command.Self:
             print(command())
         elif command == Command.Run_Command:

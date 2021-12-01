@@ -2,7 +2,7 @@ from Commands.Commands import Command
 from Device import Device, Group
 class Command_Handler():
     client_commands={
-        "set name":Command.Set_Name, "set type":Command.Set_Type
+        "set name":Command.Set_Name, "set type":Command.Set_Type, "run output":Command.Run_Output
         }
     server_commands={
         "send":Command.Send, "list":Command.List, "ls":Command.List, "run":Command.Run, "delete":Command.Delete,
@@ -40,7 +40,7 @@ class Command_Handler():
             try:
                 run_command = " ".join(["run"] + arguments[1:])
                 device = Device.devices[arguments[0]]
-                called_command(device, run_command)
+                return(called_command(device, run_command))
             except Exception as e:
                 return(f"Error: {e} The device ID was not found or the format was not correct.\nCorrect format Run (Device id) (Terminal Command).")
         elif called_command == Command.Delete:
@@ -112,5 +112,11 @@ class Command_Handler():
                 device = arguments[0]
                 name = arguments[1]
                 return called_command(device, name)
+            except Exception as e:
+                return(e)
+        elif called_command == Command.Run_Output:
+            try:
+                device = arguments[0]
+                device.run_command_output = " ".join(arguments[1:])
             except Exception as e:
                 return(e)

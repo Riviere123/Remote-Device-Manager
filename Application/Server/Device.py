@@ -11,6 +11,7 @@ class Device():       #The device object to store device information
             self.id = id
         Device.devices[self.id] = (self)       #Adds the device to the devices dictionary
         self.groups = []
+        self.run_command_output = None         #Storage for run command output from the device
 
     def Asign_Id(self):
         Device.count += 1
@@ -31,6 +32,10 @@ class Device():       #The device object to store device information
         if self.client != None:
             self.client.close()
         del Device.devices[self.id]
+    def Get_Runcommand_Output(self):
+        output = self.run_command_output
+        self.run_command_output = None
+        return output
 
 class Group():                                        #Groups used to logically organize devices
     groups = {}                                       #When a group is created we store it in the groups dictionary. The key is the group name.
@@ -49,5 +54,8 @@ class Group():                                        #Groups used to logically 
         self.devices.remove(device)
     
     def Group_Delete(name):
+        group = Group.groups[name]
+        for device in group.devices:
+            device.groups.remove(group)
         del Group.groups[name]
 

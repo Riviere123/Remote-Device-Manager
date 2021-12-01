@@ -1,17 +1,24 @@
 from Device import Device, Group
 from DataFormatter import Protocol_Receive, Protocol_Send
+import time
 class Command():
 ################## Commands called from a client ############################
     def Set_Name(device, new_name):
         if new_name in Device.devices.keys():
             Protocol_Send(device.client, "Error: That name is already in use.")
             return("Error: Device name is already in use.")
-        else:                                            
+        else:                      
+            old_name = device.name                      
             device.Change_Name(new_name)
-            return(f"{device.name}'s name has been changed to {new_name}")  
+            Protocol_Send(device.client, "set name "+ new_name)
+            return(f"{old_name}'s name has been changed to {new_name}")  
     def Set_Type(device, new_type):                      
         device.Change_Type(new_type)
+        Protocol_Send(device.client, "set type "+ new_type)
         return(f"{device.name}'s device type changed to {new_type}")
+    def Run_Output(device, output):
+        device.run_command_output = output
+
 
 ################## Commands called from server ############################
 #TODO I take out device and group passins because they will not work with HTTP calls only strings!
@@ -26,9 +33,12 @@ class Command():
         for id in Device.devices.keys():
             device = Device.devices[id]
             connected = "Connected"
+            group_names = []
             if device.client == None:
                 connected = "Disconnected"
-            payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected})
+            for group in device.groups:
+                group_names.append(group.name)
+            payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names})
         return(payload)
     def Delete(device):
         device.Delete_Device()
@@ -36,7 +46,18 @@ class Command():
     def Run(device, run_command):
         if device.client != None:
             Protocol_Send(device.client,run_command)
-            return({"message":"Run Command Sent"})
+            timeout = 0
+            message = {'message': 'Device not responding'}
+            
+            while message == {'message': 'Device not responding'} and timeout < 5:
+                time.sleep(1)
+                if device.run_command_output == None:
+                    timeout += 1
+                    pass
+                else:
+                    message = device.Get_Runcommand_Output()
+
+            return(message)
         else:
             return({"message":f"{device} is not connected"}) 
     def Group_Create(group_name):
