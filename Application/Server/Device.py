@@ -23,7 +23,6 @@ class Device():       #The device object to store device information
             connected = "Disconnected"
         return (f"id:{self.id} name:{self.name} type:{self.archetype} status:{connected}")
 
-    ###Changes the devices name and changes the key in the devices dictionary
     def Change_Name(self, new_name):
         self.name = new_name
     def Change_Type(self, new_type):

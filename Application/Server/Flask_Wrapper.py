@@ -20,4 +20,4 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 )
 flask_server.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
-from Commands.HTTP_Command_Handler import HTTP_Command_Handler
+from Command import HTTP_Command_Handler
