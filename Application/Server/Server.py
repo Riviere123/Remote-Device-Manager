@@ -65,4 +65,4 @@ if __name__ == "__main__":
     server_thread = threading.Thread(target=Start_Server, args=(Config.IP_ADDRESS, Config.PORT))        #Start the server
     server_thread.start()
     from Flask_Wrapper import flask_server
-    flask_server.run(debug=False, port=8000)
+    flask_server.run(debug=False, port=9000)

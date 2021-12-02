@@ -77,16 +77,19 @@ def HTTP_Group(group_name):
         return(jsonify(message))
     if request.method == 'DELETE':
         data = request.json
-        device = Device.devices[data['id']]
-        group = Group.groups[group_name]
-        message = Group_Remove(group, device)
-        message = Process_Command(Group_Remove, [group, device])
+        device = data['id']
+        message = Process_Command(Group_Remove, [group_name, device])
         return(jsonify(message))
     if request.method == 'POST':
         data = request.json
-        device = Device.devices[data['id']]
-        group = Group.groups[group_name]
-        message = Process_Command(Group_Add, [group, device])
+        device = data['id']
+        message = Process_Command(Group_Add, [group_name, device])
         return(jsonify(message))
 
-
+@flask_server.route('/groups/<string:group_name>/run', methods=["POST"])
+def HTTP_Group_Run(group_name):
+    if request.method == 'POST':
+        data = request.json
+        command = data["command"]
+        message = Process_Command(Group_Run,[group_name, command])
+        return(jsonify(message))

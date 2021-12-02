@@ -57,4 +57,3 @@ class Group():                                        #Groups used to logically 
         for device in group.devices:
             device.groups.remove(group)
         del Group.groups[name]
-

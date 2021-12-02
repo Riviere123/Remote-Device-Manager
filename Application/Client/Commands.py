@@ -1,6 +1,7 @@
 from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
-import os
+# import os
+from subprocess import PIPE, Popen
 
 #Sends the message to the server
 class Command():
@@ -24,15 +25,25 @@ class Command():
         return Device.this_device
 
     #Run a terminal command on this device
-    #TODO pipe error message to the server
     def Run_Command(data, from_server):
-        stream = os.popen(data)
-        output = stream.read()
-        if from_server:                                        #If the command was from the server send the output to the server
-            Protocol_Send(Device.this_device.server,"run output " + output)
-            return(f"{data} called from Server")
-        else:                                                  #otherwise just print to the console
-            return output
+        try:
+            p = Popen(data, shell=True, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
+            payload = f"#|#stdout {stdout.decode()} #|#stderr {stderr.decode()}"
+            if from_server:
+                Protocol_Send(Device.this_device.server,"run output " + payload)
+                return(f"{data} called from Server")
+            else:
+                return payload
+        except Exception as e:
+            print(e)
+        # stream = os.popen(data)
+        # output = stream.read()
+        # if from_server:                                        #If the command was from the server send the output to the server
+        #     Protocol_Send(Device.this_device.server,"run output " + output)
+        #     return(f"{data} called from Server")
+        # else:                                                  #otherwise just print to the console
+        #     return output
 
 class Command_Handler():
     def Check_For_Command(split_data):              #Checks for a command in the given list of strings

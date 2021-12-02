@@ -31,13 +31,13 @@ def Process_Command(called_command, arguments):                         #When we
             message = " ".join(arguments[1:])
             return(called_command(device, message))
         except Exception as e:
-            return (f"Error: {e} The device ID was not found or the format was not correct.\nCorrect format Send (Device id) (Message). ")
+            return ({"error": f"{e} The device ID was not found or the format was not correct.\nCorrect format Send (Device id) (Message)."})
 
     elif called_command == List:
         try:
             return(called_command())
         except Exception as e:
-            return(e)
+            return({"error": e})
 
     elif called_command == Run:
         try:
@@ -45,44 +45,46 @@ def Process_Command(called_command, arguments):                         #When we
             device = Device.devices[arguments[0]]
             return(called_command(device, run_command))
         except Exception as e:
-            return(f"Error: {e} The device ID was not found or the format was not correct.\nCorrect format Run (Device id) (Terminal Command).")
+            return({"error": f"{e} The device ID was not found or the format was not correct.\nCorrect format Run (Device id) (Terminal Command)."})
 
     elif called_command == Delete:
         try:
             device = Device.devices[arguments[0]]
             return(called_command(device))
         except Exception as e:
-            return(f"Error: {e} The device ID was not found or the format was not correct.\nCorrect format Delete (Device id).")
+            return({"error": f"{e} The device ID was not found or the format was not correct.\nCorrect format Delete (Device id)."})
 
     elif called_command == Group_Create:
         try:
             group_name = arguments[0]
+            if " " in group_name:
+                return({"error": "Group name cannot contain a space."})
             return(called_command(group_name))
         except Exception as e:
-            return(f"Error: {e}.\nCorrect format Group Create (Group Name).")
+            return({"error": f"{e}.\nCorrect format Group Create (Group Name)."})
 
     elif called_command == Group_Add:
         try:
             group_name = arguments[0]
-            device_name = arguments[1]
+            device_id = arguments[1]
             group = Group.groups[group_name]
-            device = Device.devices[device_name]
+            device = Device.devices[device_id]
             return(called_command(group,device))
         except Exception as e:
-            return(f"Error: {e} The device ID was not found, the group was not found, or the format was not correct.\nCorrect format Group Add (Group Name) (Device id).")
+            return({"error": f"{e} The device ID was not found, the group was not found, or the format was not correct.\nCorrect format Group Add (Group Name) (Device id)."})
     
     elif called_command == Group_List:
         try:
             return(called_command())
         except Exception as e:
-            return(f"Error: {e}.\nCorrect format Group List or Group ls.")
+            return({"error": f"{e}. Correct format Group List or Group ls."})
     
     elif called_command == Group_Delete:
         try:
             group_name = arguments[0]
             return(called_command(group_name))
         except Exception as e:
-            return(e)
+            return({"error": f"{e}the group name provided was not found."})
     
     elif called_command == Group_Remove:
         try:
@@ -92,7 +94,7 @@ def Process_Command(called_command, arguments):                         #When we
             device = Device.devices[device_name]
             return(called_command(group, device))
         except Exception as e:
-            return(f"Error: {e} The device id was not found or the group name was not found.\nCorrect format Group Remove (Group) (Device id).")
+            return({"error": f"{e} The device id was not found or the group name was not found.\nCorrect format Group Remove (Group) (Device id)."})
     
     elif called_command == Group_Send:
         try:
@@ -101,7 +103,7 @@ def Process_Command(called_command, arguments):                         #When we
             message = " ".join(arguments[1:])
             return(called_command(group, message))
         except Exception as e:
-            return(f"Error: {e} The device id was not found or the group name was not found.\nCorrect format Group Send (Group) (Message).")
+            return({"error": f"{e} The device id was not found or the group name was not found.\nCorrect format Group Send (Group) (Message)."})
     
     elif called_command == Group_Run:
         try:
@@ -110,7 +112,7 @@ def Process_Command(called_command, arguments):                         #When we
             run_command = " ".join(["run"] + arguments[1:])
             return(called_command(group, run_command))   
         except Exception as e:
-            return(f"Error: {e} The device id was not found or the group name was not found.\nCorrect format Group Run (Group) (Terminal Command).")
+            return({"error": f"{e} The device id was not found or the group name was not found.\nCorrect format Group Run (Group) (Terminal Command)."})
     
     elif called_command == Set_Type:
         try:
@@ -118,7 +120,7 @@ def Process_Command(called_command, arguments):                         #When we
             type = arguments[1]
             return called_command(device, type)
         except Exception as e:
-            return(e)
+            return({"error": f"{e} Invalid device id."})
     
     elif called_command == Set_Name:
         try:
@@ -126,25 +128,25 @@ def Process_Command(called_command, arguments):                         #When we
             name = arguments[1]
             return called_command(device, name)
         except Exception as e:
-            return(e)
+            return({"error": f"{e} Invalid device id."})
     
     elif called_command == Run_Output:
         try:
             device = arguments[0]
             device.run_command_output = " ".join(arguments[1:])
         except Exception as e:
-            return(e)
+            return({"error": f"{e} Invalid device id."})
 
     elif called_command == Get_Device_By_ID:
         try:
             device = arguments[0]
             return(called_command(device))
         except Exception as e:
-            return(e)
+            return({"error": f"{e} Invalid device id."})
     
     elif called_command == Get_Group_By_Name:
         try:
             group = arguments[0]
             return(called_command(group))
         except Exception as e:
-            return(e)
+            return({"error": f"{e} Invalid group name."})

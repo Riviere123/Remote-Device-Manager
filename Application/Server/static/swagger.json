@@ -38,6 +38,11 @@
             "name": "/groups/{group_name}",
             "description": "Example API calls for /group/{group_name}"
         }
+        ,
+        {
+            "name": "/groups/{group_name}/commands",
+            "description": "Example API calls for group commands"
+        }
     ],
     "paths": {
         "/devices": {
@@ -284,6 +289,44 @@
                     }
                 }
             } 
+        },
+        "/groups/{group_name}/run": {
+            "post": {
+                "tags": [
+                    "/groups/{group_name}/commands"
+                ],
+                "summary": "Adds the provided device to the group",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "group_name",
+                        "required": true,
+                        "description": "name of the group",
+                        "schema": {
+                            "$ref": "#/components/schemas/group"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Provide the terminal command to run on every device in the group.",
+                    "required": true,
+                    "content":{
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#components/schemas/runCommandPostBody"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200": {
+                        "description": "OK",
+                        "Schema":{
+                            "$ref": "#/components/schemas/groupRunResponse"
+                        }
+                    }
+                }
+            }
         },
         "/devices/{id}/run":{
             "post": {
@@ -536,10 +579,25 @@
                         "format": "string"
                     }
                 }
+            },
+            "groupRunResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "object",
+                        "properties": {
+                            "stderr": {
+                                "type": "string",
+                                "format": "string"
+                            },
+                            "stdout": {
+                                "type": "string",
+                                "format": "string"
+                            }
+                        }
+                    }
+                }
             }
-
-
         }
-    }
-    
+    }   
 }
