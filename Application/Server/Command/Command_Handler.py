@@ -10,6 +10,7 @@ server_commands={         #Dictionary of what the server can enter in the termin
     "group create":Group_Create, "group list":Group_List, "group ls":Group_List, "group add":Group_Add,
     "group delete":Group_Delete, "group remove":Group_Remove, "group send":Group_Send, "group run": Group_Run, 
     }
+
 def Check_For_Client_Command(split_data):                               #Checks for a command in the given list of strings
     for i in range(0,4):
         command = " ".join(split_data[0:i])
@@ -112,7 +113,7 @@ def Process_Command(called_command, arguments):                         #When we
             run_command = " ".join(["run"] + arguments[1:])
             return(called_command(group, run_command))   
         except Exception as e:
-            return({"error": f"{e} The device id was not found or the group name was not found.\nCorrect format Group Run (Group) (Terminal Command)."})
+            return({"error": f"{e} The group name was not found.\nCorrect format Group Run (Group) (Terminal Command)."})
     
     elif called_command == Set_Type:
         try:

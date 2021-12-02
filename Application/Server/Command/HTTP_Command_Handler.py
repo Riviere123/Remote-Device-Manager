@@ -4,6 +4,7 @@ from Command.Command_Handler import Process_Command
 from Command.Commands import *
 from Device import Device, Group
 
+#TODO Wireshark the API calls
 
 @flask_server.route('/', methods=["GET"])
 def Index():
@@ -49,7 +50,7 @@ def HTTP_Device_Run(device_id):
     if request.method == 'POST':
         data = request.json
         command = data["command"]
-        message = Process_Command(Run,[device_id, command])
+        message = Process_Command(Run[device_id, command])
         return(jsonify(message))
 
 ##################GROUPS################################

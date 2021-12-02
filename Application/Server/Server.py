@@ -12,27 +12,35 @@ def Deal_With_Client(connstream):
     device_name = device_setup_message[0]                                 #Pull the device name
     device_archetype = device_setup_message[1]                            #Archetype
     device_id = device_setup_message[2]                                   #Id
+    device_serial = device_setup_message[3]                               #Serial
+    entered_password = device_setup_message[4]                            #Password passed to the server
+    if entered_password == Config.SERVER_PASSWORD:
+        #TODO Optomise
+        found = False
+        for device in Device.devices:
+            client_device = Device.devices[device]
+            if client_device.serial == device_serial:                                   #If that device has connected before based on there serial number                                           #Set the device to the existing device
+                client_device.name = device_name                                  #Set the device name to clients devices name
+                client_device.archetype = device_archetype                        #Archetyp
+                client_device.client = connstream                                 #Set the new connection as the devices client
+                Protocol_Send(connstream, f"set id {client_device.id}")                       #Send the same Id back to the client
+                found = True
+        if not found:                                                                 #Otherwise if it is a never before connected device
+            client_device = Device(connstream, device_name, device_archetype, device_id, device_serial) #Set the client_device to a newly created Device object.
+            Protocol_Send(connstream, f"set id {client_device.id}")                                  #Send the generated id to the device(The device will then store this id)
 
-    #TODO ADD SECURITY FOR NEW DEVICES TO AVOID SPOOFING
-    if device_id in Device.devices.keys():                                #If that device has connected before based on there id
-        client_device = Device.devices[device_id]                         #Set the device to the existing device
-        client_device.name = device_name                                  #Set the device name to clients devices name
-        client_device.archetype = device_archetype                        #Archetyp
-        client_device.client = connstream                                 #Set the new connection as the devices client
-        Protocol_Send(connstream, client_device.id)                       #Send the same Id back to the client
-    else:                                                                 #Otherwise if it is a never before connected device
-        client_device = Device(connstream, device_name, device_archetype, device_id) #Set the client_device to a newly created Device object.
-        Protocol_Send(connstream, client_device.id)                                  #Send the generated id to the device(The device will then store this id)
-
-    while True:
-        try:
-            data = Protocol_Receive(connstream)       #data = any messages from the client
-            Client_Command(client_device, data)       #Checks if there is any commands in the message and reacts accordingly
-        except:                                       #Client is disconnected
-            client_device.client.close()              #Close the clients connection                 
-            client_device.client = None               #Set the devices client to None(This is appropriate for seeing if the client is connected or not)
-            print(f"{client_device}")    #Print that the client has disconnected
-            break                                     #End the thread
+        while True:
+            try:
+                data = Protocol_Receive(connstream)       #data = any messages from the client
+                Client_Command(client_device, data)       #Checks if there is any commands in the message and reacts accordingly
+            except:                                       #Client is disconnected
+                client_device.client.close()              #Close the clients connection                 
+                client_device.client = None               #Set the devices client to None(This is appropriate for seeing if the client is connected or not)
+                print(f"{client_device}")    #Print that the client has disconnected
+                break                                     #End the thread
+    else:
+        Protocol_Send(connstream, f"failed to connect")
+        connstream.close()
 
 ### Starts the Terminal and allows commands to be entered from the server ###
 def Terminal():                                                                                                                                                     

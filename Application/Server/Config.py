@@ -1,6 +1,7 @@
 ###Server Startup
 IP_ADDRESS = ""        
 PORT = 10023 
+SERVER_PASSWORD = "12345"
 
 ###Certificate Generation
 HOST_NAME = 'localhost'     

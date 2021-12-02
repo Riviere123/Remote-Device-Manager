@@ -107,7 +107,7 @@
                     "200": {
                         "description": "OK",
                         "schema":{
-                            "$ref": "#/components/schemas/deviceDelete"
+                            "$ref": "#/components/schemas/genericMessage"
                         }
                     },
                     "500":{

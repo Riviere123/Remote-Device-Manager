@@ -1,8 +1,6 @@
 from Device import Device, Group
 from DataFormatter import Protocol_Send
 import time
-import re
-##TODO Need to make error handling better so API calls dont error out.
 ################## Commands called from a client ############################
 def Set_Name(device, new_name):
     if new_name in Device.devices.keys():
@@ -30,7 +28,7 @@ def Send(device, message):
         return({"message":"Message sent"})
     else:
         return({"error":f"{device} is not connected"}) 
-
+#TODO Remove debug features that displays serial number
 def List():
     payload = []
     for id in Device.devices.keys():
@@ -41,7 +39,7 @@ def List():
             connected = "Disconnected"
         for group in device.groups:
             group_names.append(group.name)
-        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names})
+        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names, "serial": device.serial})
     return(payload)
 
 def Delete(device):

@@ -19,6 +19,10 @@ class Command():
         Device.this_device.archetype = archetype
         if not from_server:
             Protocol_Send(Device.this_device.server, f"set type {archetype}")
+    
+    def Set_Id(id, from_server):
+        if from_server:
+            Device.this_device.id = id
 
     #Get info about this device
     def Self():              
@@ -37,17 +41,10 @@ class Command():
                 return payload
         except Exception as e:
             print(e)
-        # stream = os.popen(data)
-        # output = stream.read()
-        # if from_server:                                        #If the command was from the server send the output to the server
-        #     Protocol_Send(Device.this_device.server,"run output " + output)
-        #     return(f"{data} called from Server")
-        # else:                                                  #otherwise just print to the console
-        #     return output
 
 class Command_Handler():
     def Check_For_Command(split_data):              #Checks for a command in the given list of strings
-        commands = {'set name':Command.Set_Name, "set type":Command.Set_Type, 'self':Command.Self, 'run':Command.Run_Command}
+        commands = {'set id':Command.Set_Id,'set name':Command.Set_Name, "set type":Command.Set_Type, 'self':Command.Self, 'run':Command.Run_Command}
         for i in range(4,0,-1):                     #Check from longest command to shortest command.
             command = " ".join(split_data[0:i])
             if command in commands.keys():
@@ -70,6 +67,8 @@ class CLI_Command_Handler():
         elif command == Command.Run_Command:
             data = " ".join(split_data[1:])
             print(command(data, from_Server))
+        elif command == Command.Set_Id:
+            command(split_data[2], from_Server)
         else:                                        #If no command is found
             if from_Server:                          #If the data was from the server
                 print(f"Server: {data_input}")       #Print the message from the server
