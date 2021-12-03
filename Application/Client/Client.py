@@ -2,7 +2,7 @@ import ssl, socket, threading
 from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
 from Commands import CLI_Command_Handler
-from serialgeneration import Handle_Serial
+from SerialGeneration import Handle_Serial
 import Config
 
 #Connects to the server on given ip/port and creates send thread. We also send initial data to the server (Name/type)
@@ -20,7 +20,7 @@ def Connect(host, port, password):
     device_setup_message = f"{device.name} {device.archetype} {device.id} {device.serial} {password}"                  #Create the setup message
     Protocol_Send(connection, device_setup_message)                                         #Send the device setup message
 
-    # Device.this_device.id=Protocol_Receive(connection)                                      #Receieve and set the id. If the device id was anything but -1 you will recieve the same id as you had sent.
+    Device.this_device.id=Protocol_Receive(connection)                                      #Receieve and set the id. If the device id was anything but -1 you will recieve the same id as you had sent.
 
     receive_thread = threading.Thread(target=Receive_Data, args=(connection,))              #Create and start a thread to recieve data
     receive_thread.start()

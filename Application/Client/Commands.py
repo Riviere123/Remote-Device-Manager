@@ -44,7 +44,8 @@ class Command():
 
 class Command_Handler():
     def Check_For_Command(split_data):              #Checks for a command in the given list of strings
-        commands = {'set id':Command.Set_Id,'set name':Command.Set_Name, "set type":Command.Set_Type, 'self':Command.Self, 'run':Command.Run_Command}
+        commands = {'set id':Command.Set_Id,'set name':Command.Set_Name, 
+        "set type":Command.Set_Type, 'self':Command.Self, 'run':Command.Run_Command}
         for i in range(4,0,-1):                     #Check from longest command to shortest command.
             command = " ".join(split_data[0:i])
             if command in commands.keys():
