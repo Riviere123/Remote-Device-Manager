@@ -1,4 +1,4 @@
-import ssl, socket, threading
+import ssl, socket, threading, getpass
 from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
 from Commands import CLI_Command_Handler
@@ -53,7 +53,7 @@ def Terminal():
 if __name__ == "__main__":
     name = input("Name your device: ").lower()                  #set our name
     archetype = input("Give your device a type: ").lower()      #set our archetype
-    password = input("Give the server password. ")              #The servers password
+    password = getpass.getpass('Password:')
     Handle_Serial(Config.SERIAL_LENGTH)
     device = Device(name, archetype, Config.SERIAL)                            #create our device object
     connected = False                                           #Initialize connected bool

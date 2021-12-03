@@ -3,16 +3,14 @@ from DataFormatter import Protocol_Send
 import time
 ################## Commands called from a client ############################
 def Set_Name(device, new_name):
-    if new_name in Device.devices.keys():
-        Protocol_Send(device.client, "Error: That name is already in use.")
-        return({"Error": "Device name is already in use."})
-    else:                      
-        old_name = device.name                      
-        device.Change_Name(new_name)
-        Protocol_Send(device.client, "set name "+ new_name)
-        return({"message": f"{old_name}'s name has been changed to {new_name}"})
+    device = Device.devices[device]         
+    old_name = device.name                      
+    device.Change_Name(new_name)
+    Protocol_Send(device.client, "set name "+ new_name)
+    return({"message": f"{old_name}'s name has been changed to {new_name}"})
 
-def Set_Type(device, new_type):                      
+def Set_Type(device, new_type): 
+    device = Device.devices[device]                     
     device.Change_Type(new_type)
     Protocol_Send(device.client, "set type "+ new_type)
     return({"message": f"{device.name}'s device type changed to {new_type}"})

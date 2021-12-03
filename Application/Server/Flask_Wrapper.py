@@ -1,13 +1,28 @@
 from flask import Flask, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
 import Config
 
 flask_server = Flask(__name__)
+auth = HTTPBasicAuth()
 flask_server.config["SECRET_KEY"] = Config.FLASK_SECRET_KEY
 
-@flask_server.route('/static/<path:path>')
-def send_static(path):
-    return send_from_directory('static', path)
+users={
+    "john": generate_password_hash("password")
+}
+
+@auth.verify_password
+def Verify_Password(username, password):
+    if username in users and \
+            check_password_hash(users.get(username), password):
+        return username
+
+
+@flask_server.route('/test')
+@auth.login_required
+def index():
+    return "Hello, {}!".format(auth.current_user())
 
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.json'

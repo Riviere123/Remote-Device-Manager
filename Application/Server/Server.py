@@ -3,8 +3,7 @@ from Device import Device
 from DataFormatter import Protocol_Send, Protocol_Receive
 from Command.CLI_Command_Handler import Client_Command, Server_Command
 import Config
-
-    
+from Flask_Wrapper import flask_server    
 
 ### Each client will have their own Deal_With_Client Thread ##@
 def Deal_With_Client(connstream):
@@ -49,8 +48,8 @@ def Terminal():
 
 #starts the server with the provided IP and Port
 def Start_Server(host, port):
-    context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)                         #Setting context to default client_auth context
-    context.load_cert_chain(certfile="./Auth/certificate.pem", keyfile="./Auth/key.pem")  #Loads the Certificate and Key
+    # context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)                         #Setting context to default client_auth context
+    # context.load_cert_chain(certfile="./Auth/certificate.pem", keyfile="./Auth/key.pem", password=Config.PASSWORD)  #Loads the Certificate and Key
     bindsocket = socket.socket()                                                          
     bindsocket.bind((host, port))                                                         #binding the socket and port
     bindsocket.listen()                                                                   #listening on that port
@@ -70,7 +69,10 @@ def Start_Server(host, port):
             print(f"{e} Connection failed.")
 
 if __name__ == "__main__":
+    context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)                                                   #Setting context to default client_auth context
+    context.load_cert_chain(certfile="./Auth/certificate.pem", keyfile="./Auth/key.pem", password=Config.PASSWORD)  #Loads the Certificate and Key
+
     server_thread = threading.Thread(target=Start_Server, args=(Config.IP_ADDRESS, Config.PORT))        #Start the server
     server_thread.start()
-    from Flask_Wrapper import flask_server
-    flask_server.run(debug=False, port=9000)
+    
+    flask_server.run(ssl_context=context, debug=False, port=Config.FLASK_PORT)
