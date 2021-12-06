@@ -5,14 +5,15 @@ from Command.CLI_Command_Handler import Client_Command, Server_Command
 import Config
 from Flask_Wrapper import flask_server    
 
-### Each client will have their own Deal_With_Client Thread ##@
+### Each client will have their own Deal_With_Client Thread ###
 def Deal_With_Client(connstream):
     device_setup_message = Protocol_Receive(connstream).split(" ")        #Recieve the first message from the client
     device_name = device_setup_message[0]                                 #Pull the device name
     device_archetype = device_setup_message[1]                            #Archetype
     device_id = device_setup_message[2]                                   #Id
     device_serial = device_setup_message[3]                               #Serial
-    entered_password = device_setup_message[4]                            #Password passed to the server
+    device_platform = device_setup_message[4]                             #OS information
+    entered_password = device_setup_message[5]                            #Password passed to the server
     if entered_password == Config.SERVER_PASSWORD:
         #TODO Optomise
         found = False
@@ -25,7 +26,7 @@ def Deal_With_Client(connstream):
                 Protocol_Send(connstream, f"set id {client_device.id}")                       #Send the same Id back to the client
                 found = True
         if not found:                                                                 #Otherwise if it is a never before connected device
-            client_device = Device(connstream, device_name, device_archetype, device_id, device_serial) #Set the client_device to a newly created Device object.
+            client_device = Device(connstream, device_name, device_archetype, device_id, device_serial, device_platform) #Set the client_device to a newly created Device object.
             Protocol_Send(connstream, f"set id {client_device.id}")                                  #Send the generated id to the device(The device will then store this id)
 
         while True:
@@ -48,8 +49,6 @@ def Terminal():
 
 #starts the server with the provided IP and Port
 def Start_Server(host, port):
-    # context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)                         #Setting context to default client_auth context
-    # context.load_cert_chain(certfile="./Auth/certificate.pem", keyfile="./Auth/key.pem", password=Config.PASSWORD)  #Loads the Certificate and Key
     bindsocket = socket.socket()                                                          
     bindsocket.bind((host, port))                                                         #binding the socket and port
     bindsocket.listen()                                                                   #listening on that port
@@ -72,7 +71,7 @@ if __name__ == "__main__":
     context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)                                                   #Setting context to default client_auth context
     context.load_cert_chain(certfile="./Auth/certificate.pem", keyfile="./Auth/key.pem", password=Config.PASSWORD)  #Loads the Certificate and Key
 
-    server_thread = threading.Thread(target=Start_Server, args=(Config.IP_ADDRESS, Config.PORT))        #Start the server
+    server_thread = threading.Thread(target=Start_Server, args=(Config.IP_ADDRESS, Config.PORT))                    #Start the server
     server_thread.start()
-    
-    flask_server.run(ssl_context=context, debug=False, port=Config.FLASK_PORT)
+
+    flask_server.run(ssl_context=context, debug=False, port=Config.FLASK_PORT)                                      #Start the flask server

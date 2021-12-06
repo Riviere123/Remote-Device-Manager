@@ -3,6 +3,7 @@ from DataFormatter import Protocol_Send
 import time
 ################## Commands called from a client ############################
 def Set_Name(device, new_name):
+    print(device, new_name)
     device = Device.devices[device]         
     old_name = device.name                      
     device.Change_Name(new_name)
@@ -37,7 +38,7 @@ def List():
             connected = "Disconnected"
         for group in device.groups:
             group_names.append(group.name)
-        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names, "serial": device.serial})
+        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names, "platform": device.os_platform, "serial": device.serial})
     return(payload)
 
 def Delete(device):

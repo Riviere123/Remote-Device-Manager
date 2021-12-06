@@ -18,12 +18,6 @@ def Verify_Password(username, password):
             check_password_hash(users.get(username), password):
         return username
 
-
-@flask_server.route('/test')
-@auth.login_required
-def index():
-    return "Hello, {}!".format(auth.current_user())
-
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.json'
 swaggerui_blueprint = get_swaggerui_blueprint(

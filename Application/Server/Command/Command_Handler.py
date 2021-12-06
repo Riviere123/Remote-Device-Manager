@@ -1,5 +1,6 @@
 from Command.Commands import *
 from Device import Device, Group
+import sys, os
 
 
 client_commands={         #Dictionary of what the client can send to the server and the corresponding commands it calls.                                                                                                
@@ -129,13 +130,19 @@ def Process_Command(called_command, arguments):                         #When we
             name = arguments[1]
             return called_command(device, name)
         except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             return({"error": f"{e} Invalid device id."})
     
     elif called_command == Run_Output:
         try:
-            device = arguments[0]
+            device = Device.devices[arguments[0]]
             device.run_command_output = " ".join(arguments[1:])
         except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             return({"error": f"{e} Invalid device id."})
 
     elif called_command == Get_Device_By_ID:

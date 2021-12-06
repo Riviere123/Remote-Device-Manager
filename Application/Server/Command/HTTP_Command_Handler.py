@@ -4,14 +4,10 @@ from Command.Command_Handler import Process_Command
 from Command.Commands import *
 from Device import Device, Group
 
-#TODO Wireshark the API calls
-
-
 @flask_server.route('/', methods=["GET"])
-@auth.login_required
 def Index():
     if request.method == 'GET':
-        return(jsonify({"message":"Server is live!"}))
+        return(jsonify({"message":"Server is live! API docs at /swagger"}))
 
 ###################DEVICE#################################
 

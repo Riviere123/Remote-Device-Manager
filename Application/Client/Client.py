@@ -1,7 +1,7 @@
 import ssl, socket, threading, getpass
 from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
-from Commands import CLI_Command_Handler
+from Command.Command_Handler import Client_Terminal, Server_Data_Processor
 from SerialGeneration import Handle_Serial
 import Config
 
@@ -17,10 +17,8 @@ def Connect(host, port, password):
 
     print(f"Connected to {host}:{port}")
 
-    device_setup_message = f"{device.name} {device.archetype} {device.id} {device.serial} {password}"                  #Create the setup message
+    device_setup_message = f"{device.name} {device.archetype} {device.id} {device.serial} {device.os_platform} {password}"                  #Create the setup message
     Protocol_Send(connection, device_setup_message)                                         #Send the device setup message
-
-    Device.this_device.id=Protocol_Receive(connection)                                      #Receieve and set the id. If the device id was anything but -1 you will recieve the same id as you had sent.
 
     receive_thread = threading.Thread(target=Receive_Data, args=(connection,))              #Create and start a thread to recieve data
     receive_thread.start()
@@ -33,8 +31,8 @@ def Receive_Data(connection):
     global connected
     while connected:                                  #If we have an active connection
         try:
-            message = Protocol_Receive(connection)    #Recieve message from server
-            CLI_Command_Handler.Terminal_Command(message,True)            #Checks for commands if no command is found prints to console.
+            data = Protocol_Receive(connection)    #Recieve data from server
+            Server_Data_Processor(data)            #Checks for commands if no command is found prints to console.
         except:                                             
             print("Connection to host lost.")         #If no more data is flowing, we have disconnected from the server
             connected = False                         #Set connected to false
@@ -42,11 +40,7 @@ def Receive_Data(connection):
 ###The terminal for the client to enter commands and send data to server from
 def Terminal(): 
     while True:                                                                                                                                                      
-        try:
-            data_input = input("\n")
-            CLI_Command_Handler.Terminal_Command(data_input, False)
-        except Exception as e:
-            print(e)
+        Client_Terminal()
 
 
 #PRE UI FUNCTIONALITY

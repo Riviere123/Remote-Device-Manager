@@ -1,7 +1,7 @@
 class Device():       #The device object to store device information
     devices = {}      #List of all devices created
     count = 0
-    def __init__(self, client, name, archetype, id, serial):
+    def __init__(self, client, name, archetype, id, serial, os_platform):
         self.client = client                     #Pass the socket object as client
         self.name = name                         #Set the name of the device(nickname)
         self.archetype = archetype               #Set the type of device that it is. will need to rework this for devices that have more than one sensor etc...           #
@@ -13,6 +13,7 @@ class Device():       #The device object to store device information
         Device.devices[self.id] = (self)       #Adds the device to the devices dictionary
         self.groups = []
         self.run_command_output = None         #Storage for run command output from the device
+        self.os_platform = os_platform
 
     def Asign_Id(self):
         Device.count += 1
@@ -22,7 +23,7 @@ class Device():       #The device object to store device information
         connected = "Connected"
         if self.client == None:
             connected = "Disconnected"
-        return (f"id:{self.id} name:{self.name} type:{self.archetype} status:{connected}")
+        return (f"id:{self.id} name:{self.name} type:{self.archetype} platform:{self.os_platform} status:{connected}")
 
     def Change_Name(self, new_name):
         self.name = new_name
