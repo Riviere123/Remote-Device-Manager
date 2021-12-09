@@ -2,6 +2,30 @@ from Command.Commands import *
 from Device import Device, Group
 import sys, os
 
+###COMMANDS SUMMARY###
+#NOTE: To add new commands first -> Create Command function inside Commands.py -> Add the command to the
+#      client_commands or server_commands dictionary depending on who you want
+#      to be able to call the command. -> Finally add the command to the Process_Command function
+
+###client_commands### commands called from the client
+# set name (name) - sets the devices name on the server
+# set type (type) - sets the devices archetype on the server
+# run output (data) - delivers the run commands output and stores it on that device object
+# attach mod (data) - sends module/sensor information to the server and attaches those modules to the device
+# set frame (frame) - sets the current camera frame on the module of the device object
+
+###server_commands### commands called from the server
+# send (device_id) - sends the message to the device 
+# list|ls - lists all connected devices and displays their information
+# run (device_id) (terminal_command) - runs the terminal command on the device and recieve the stdout and stderr of the command
+# delete (device_id) - deletes the device object and disconnects the device from the server
+# group create (group_name) - creates a group of group_name
+# group list|ls - lists all the groups and the devices within those groups
+# group add (group_name) (device_id) - adds the device_id to the group_name
+# group delete (group_name) - deletes the group with the given name
+# group remove (group_name) (device_id) - removes the device_id from the group_name
+# group send (group_name) - sends a message to every device in the group
+# group run (group_name) (terminal_command) - runs the terminal command on every device in the group and returns the output of everyone.
 
 client_commands={         #Dictionary of what the client can send to the server and the corresponding commands it calls.                                                                                                
     "set name":Set_Name, "set type":Set_Type, "run output":Run_Output, "attach mod":Attach_Module, "set frame":Set_Frame
@@ -12,23 +36,25 @@ server_commands={         #Dictionary of what the server can enter in the termin
     "group delete":Group_Delete, "group remove":Group_Remove, "group send":Group_Send, "group run": Group_Run, 
     }
 
-def Check_For_Client_Command(split_data):                               #Checks for a command in the given list of strings
+#TODO: Can probably merge the to check_for_commands into one and pass in if the client or server is calling it instead.
+
+def Check_For_Client_Command(split_data):                   #Checks for a command against the client_commands in the given list of strings
     for i in range(0,4):
-        command = " ".join(split_data[0:i])
+        command = " ".join(split_data[0:i]).lower()
         if command in client_commands.keys():
             return (i,client_commands[command])
     return (None,None)
     
-def Check_For_Server_Command(split_data):                               #Checks for a command in the given list of strings
+def Check_For_Server_Command(split_data):                   #Checks for a command against the server_commands in the given list of strings
     for i in range(4,0,-1):
-        command = " ".join(split_data[0:i])
+        command = " ".join(split_data[0:i]).lower()
         if command in server_commands.keys():
             return (i,server_commands[command])
     return (None,None)
 
-def Process_Command(called_command, arguments):                         #When we process the command we pass the command itself and the arguments
-    if called_command == Send:                                  #Based on the command given format the arguments to fit the command needs
-        try:                                                            #This is where failed commands get caught and we return the error
+def Process_Command(called_command, arguments):            #When we process the command we pass the command itself and the arguments
+    if called_command == Send:                             #Based on the command given format the arguments to fit the command needs
+        try:                                               #This is where failed commands get caught and we return the error
             device = Device.devices[arguments[0]]
             message = " ".join(arguments[1:])
             return(called_command(device, message))

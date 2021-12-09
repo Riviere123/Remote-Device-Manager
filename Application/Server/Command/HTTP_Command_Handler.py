@@ -4,14 +4,13 @@ from Command.Command_Handler import Process_Command
 from Command.Commands import *
 from Device import Device, Group
 import cv2
-
-@flask_server.route('/', methods=["GET"])
+#Home page#
+@flask_server.route('/', methods=["GET"]) 
 def Index():
     if request.method == 'GET':
         return(jsonify({"message":"Server is live! API docs at /swagger"}))
 
 ###################DEVICE#################################
-
 @flask_server.route('/devices', methods=["GET"])
 @auth.login_required
 def HTTP_List_Devices():
@@ -56,18 +55,17 @@ def HTTP_Device_Run(device_id):
         message = Process_Command(Run,[device_id, command])
         return(jsonify(message))
 
-
+#TODO: Handle multiple cameras on one device
 @flask_server.route('/devices/<string:device_id>/camera', methods=["GET"])
 @auth.login_required
 def HTTP_Device_Camera(device_id):
     if request.method == "GET":
         device = Device.devices[device_id]
         for module in device.modules:
-            if module.archetype == "camera":
+            if module.archetype == "camera":            
                 return Response(module.Start_Camera_Feed(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 ##################GROUPS################################
-
 @flask_server.route('/groups', methods=["GET", "POST", "DELETE"])
 @auth.login_required
 def HTTP_Groups():

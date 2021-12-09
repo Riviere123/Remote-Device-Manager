@@ -3,6 +3,7 @@ from DataFormatter import Protocol_Send
 import pickle
 import time
 import ast
+
 ################## Commands called from a client ############################
 def Set_Name(device, new_name):
     print(device, new_name)
@@ -26,9 +27,7 @@ def Attach_Module(device, data):
     device_module = Module(data[0], data[1])
     device.Attach_Module(device_module)
 
-#TODO WHERE I LEFT OFF!
 def Set_Frame(device, data):
-    
     device = Device.devices[device]
     joined_data = " ".join(data)
     frame = ast.literal_eval(joined_data)
@@ -133,6 +132,8 @@ def Group_Run(group, run_command):
         messages[device.id] = Run(device,run_command)
     return(messages)
 
+
+#TODO: add these commands so the CLI context can handle them
 #################### API Specific commands #######################
 def Get_Device_By_ID(id):
     device = Device.devices[id]

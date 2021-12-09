@@ -1,7 +1,7 @@
 import socket, ssl, threading
 from Device import Device
 from DataFormatter import Protocol_Send, Protocol_Receive
-from Command.CLI_Command_Handler import Client_Command, Server_Command
+from Command.CLI_Command_Handler import Client_Command, Server_Terminal
 import Config
 from Flask_Wrapper import flask_server    
 
@@ -19,11 +19,11 @@ def Deal_With_Client(connstream):
         found = False
         for device in Device.devices:
             client_device = Device.devices[device]
-            if client_device.serial == device_serial:                                   #If that device has connected before based on there serial number                                           #Set the device to the existing device
+            if client_device.serial == device_serial:                             #If that device has connected before based on there serial number                                           #Set the device to the existing device
                 client_device.name = device_name                                  #Set the device name to clients devices name
                 client_device.archetype = device_archetype                        #Archetyp
                 client_device.client = connstream                                 #Set the new connection as the devices client
-                Protocol_Send(connstream, f"set id {client_device.id}")                       #Send the same Id back to the client
+                Protocol_Send(connstream, f"set id {client_device.id}")           #Send the same Id back to the client
                 found = True
         if not found:                                                                 #Otherwise if it is a never before connected device
             client_device = Device(connstream, device_name, device_archetype, device_id, device_serial, device_platform) #Set the client_device to a newly created Device object.
@@ -45,7 +45,7 @@ def Deal_With_Client(connstream):
 ### Starts the Terminal and allows commands to be entered from the server ###
 def Terminal():                                                                                                                                                     
     while True:                         
-        Server_Command()                                                                                                                             
+        Server_Terminal()                                                                                                                             
 
 #starts the server with the provided IP and Port
 def Start_Server(host, port):
