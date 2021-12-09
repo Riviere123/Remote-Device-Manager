@@ -2,6 +2,7 @@ from Device import Device
 from DataFormatter import Protocol_Receive, Protocol_Send
 from subprocess import PIPE, Popen
 
+
 def Send(message):       
     Protocol_Send(Device.this_device.server, message)
 
@@ -48,3 +49,20 @@ def Run_Command(data, from_server):
             return({"message": payload})
     except Exception as e:
         print(e)
+
+#sends the devices modules data to the server
+def Send_Mod_Data():
+    Device.this_device.Send_Module_data()
+    return({"message": "Mod data sent"})
+
+def Start_Camera():
+    for mod in Device.this_device.modules:
+        if mod.archetype == "camera":
+            mod.Start_Camera()
+            return({"message": f"Camera on {mod.name} ended"})
+    return({"message": "No camera found"})
+
+def Stop_Camera():
+    for mod in Device.this_device.modules:
+        if mod.archetype == "camera":
+            mod.Stop_Camera()

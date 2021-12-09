@@ -4,7 +4,7 @@ import sys, os
 
 
 client_commands={         #Dictionary of what the client can send to the server and the corresponding commands it calls.                                                                                                
-    "set name":Set_Name, "set type":Set_Type, "run output":Run_Output
+    "set name":Set_Name, "set type":Set_Type, "run output":Run_Output, "attach mod":Attach_Module, "set frame":Set_Frame
     }
 server_commands={         #Dictionary of what the server can enter in the terminal and what command it corresponds to.
     "send":Send, "list":List, "ls":List, "run":Run, "delete":Delete,
@@ -33,7 +33,7 @@ def Process_Command(called_command, arguments):                         #When we
             message = " ".join(arguments[1:])
             return(called_command(device, message))
         except Exception as e:
-            return ({"error": f"{e} The device ID was not found or the format was not correct.\nCorrect format Send (Device id) (Message)."})
+            return ({"error": f"{e} The device ID was not found or the format was not correct. Correct format Send (Device id) (Message)."})
 
     elif called_command == List:
         try:
@@ -47,14 +47,14 @@ def Process_Command(called_command, arguments):                         #When we
             device = Device.devices[arguments[0]]
             return(called_command(device, run_command))
         except Exception as e:
-            return({"error": f"{e} The device ID was not found or the format was not correct.\nCorrect format Run (Device id) (Terminal Command)."})
+            return({"error": f"{e} The device ID was not found or the format was not correct. Correct format Run (Device id) (Terminal Command)."})
 
     elif called_command == Delete:
         try:
             device = Device.devices[arguments[0]]
             return(called_command(device))
         except Exception as e:
-            return({"error": f"{e} The device ID was not found or the format was not correct.\nCorrect format Delete (Device id)."})
+            return({"error": f"{e} The device ID was not found or the format was not correct. Correct format Delete (Device id)."})
 
     elif called_command == Group_Create:
         try:
@@ -63,7 +63,7 @@ def Process_Command(called_command, arguments):                         #When we
                 return({"error": "Group name cannot contain a space."})
             return(called_command(group_name))
         except Exception as e:
-            return({"error": f"{e}.\nCorrect format Group Create (Group Name)."})
+            return({"error": f"{e}. Correct format Group Create (Group Name)."})
 
     elif called_command == Group_Add:
         try:
@@ -73,7 +73,7 @@ def Process_Command(called_command, arguments):                         #When we
             device = Device.devices[device_id]
             return(called_command(group,device))
         except Exception as e:
-            return({"error": f"{e} The device ID was not found, the group was not found, or the format was not correct.\nCorrect format Group Add (Group Name) (Device id)."})
+            return({"error": f"{e} The device ID was not found, the group was not found, or the format was not correct. Correct format Group Add (Group Name) (Device id)."})
     
     elif called_command == Group_List:
         try:
@@ -96,7 +96,7 @@ def Process_Command(called_command, arguments):                         #When we
             device = Device.devices[device_name]
             return(called_command(group, device))
         except Exception as e:
-            return({"error": f"{e} The device id was not found or the group name was not found.\nCorrect format Group Remove (Group) (Device id)."})
+            return({"error": f"{e} The device id was not found or the group name was not found. Correct format Group Remove (Group) (Device id)."})
     
     elif called_command == Group_Send:
         try:
@@ -105,7 +105,7 @@ def Process_Command(called_command, arguments):                         #When we
             message = " ".join(arguments[1:])
             return(called_command(group, message))
         except Exception as e:
-            return({"error": f"{e} The device id was not found or the group name was not found.\nCorrect format Group Send (Group) (Message)."})
+            return({"error": f"{e} The device id was not found or the group name was not found. Correct format Group Send (Group) (Message)."})
     
     elif called_command == Group_Run:
         try:
@@ -114,7 +114,7 @@ def Process_Command(called_command, arguments):                         #When we
             run_command = " ".join(["run"] + arguments[1:])
             return(called_command(group, run_command))   
         except Exception as e:
-            return({"error": f"{e} The group name was not found.\nCorrect format Group Run (Group) (Terminal Command)."})
+            return({"error": f"{e} The group name was not found. Correct format Group Run (Group) (Terminal Command)."})
     
     elif called_command == Set_Type:
         try:
@@ -138,7 +138,9 @@ def Process_Command(called_command, arguments):                         #When we
     elif called_command == Run_Output:
         try:
             device = Device.devices[arguments[0]]
-            device.run_command_output = " ".join(arguments[1:])
+            arguments = " ".join(arguments[1:])
+            return called_command(device, arguments)
+            
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -158,3 +160,19 @@ def Process_Command(called_command, arguments):                         #When we
             return(called_command(group))
         except Exception as e:
             return({"error": f"{e} Invalid group name."})
+    
+    elif called_command == Attach_Module:
+        try:
+            device = arguments[0]
+            return(called_command(device, arguments[1:]))
+        except Exception as e:
+            return({"error": "While recieving modular data"})
+    
+    elif called_command == Set_Frame:
+        try:
+            device = arguments[0]
+            called_command(device, arguments[1:])
+            # return(called_command(device, arguments[1:]))
+        except Exception as e:
+            return({"error": e})
+        

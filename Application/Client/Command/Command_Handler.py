@@ -2,7 +2,8 @@ from Command.Commands import *
 
 def Check_For_Command(split_data):              #Checks for a command in the given list of strings
     commands = {'set id':Set_Id,'set name':Set_Name, 
-    "set type":Set_Type, 'self':Self, 'run':Run_Command}
+    "set type":Set_Type, 'self':Self, 'run':Run_Command, 'send mod':Send_Mod_Data,
+    'start camera':Start_Camera, 'stop camera':Stop_Camera}
     for i in range(4,0,-1):                     #Check from longest command to shortest 
         command = " ".join(split_data[0:i])
         if command in commands.keys():
@@ -23,6 +24,12 @@ def Process_Command(command, arguments, from_server):
             return(command(data, from_server))
         elif command == Set_Id:
             return(command(arguments[0], from_server))
+        elif command == Send_Mod_Data:
+            return(command())
+        elif command == Start_Camera:
+            return(command())
+        elif command == Stop_Camera:
+            return(command())
 
 def Client_Terminal():
     while True:                                                                                                                                                      
@@ -32,7 +39,9 @@ def Client_Terminal():
             length, command = Check_For_Command(split_data)  #Returns length(The index where the command ends) and the command that was found                                                                    
             arguments = split_data[length:]                                         #Designates what part of the split data is the arguments based on the index of the commands ending
             if command != None:                                                     #If there was a command found
-                print(Process_Command(command, arguments, False))          #Process the command
+                output = Process_Command(command, arguments, False)                 
+                if output != None:
+                    print(output)                                                   #Process the command
             else:
                 Send(data_input)
         except Exception as e:

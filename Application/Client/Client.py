@@ -1,5 +1,5 @@
 import ssl, socket, threading, getpass
-from Device import Device
+from Device import Device, Module
 from DataFormatter import Protocol_Receive, Protocol_Send
 from Command.Command_Handler import Client_Terminal, Server_Data_Processor
 from SerialGeneration import Handle_Serial
@@ -45,11 +45,15 @@ def Terminal():
 
 #PRE UI FUNCTIONALITY
 if __name__ == "__main__":
-    name = input("Name your device: ").lower()                  #set our name
-    archetype = input("Give your device a type: ").lower()      #set our archetype
+    name = input("Name your device: ").lower()                  #set name
+    archetype = input("Give your device a type: ").lower()      #set archetype
     password = getpass.getpass('Password:')
     Handle_Serial(Config.SERIAL_LENGTH)
-    device = Device(name, archetype, Config.SERIAL)                            #create our device object
+    device = Device(name, archetype, Config.SERIAL)                            #create device object
+    ####MODULE TESTING
+    camera_module = Module(device, "Home_Camera", "camera")
+    device.Attach_Module(camera_module)
+    #########
     connected = False                                           #Initialize connected bool
     terminal_thread = threading.Thread(target=Terminal)         #Create and start the terminal thread
     terminal_thread.start()

@@ -1,8 +1,9 @@
 from Flask_Wrapper import flask_server, auth
-from flask import jsonify, request
+from flask import jsonify, request, Response
 from Command.Command_Handler import Process_Command
 from Command.Commands import *
 from Device import Device, Group
+import cv2
 
 @flask_server.route('/', methods=["GET"])
 def Index():
@@ -55,6 +56,16 @@ def HTTP_Device_Run(device_id):
         message = Process_Command(Run,[device_id, command])
         return(jsonify(message))
 
+
+@flask_server.route('/devices/<string:device_id>/camera', methods=["GET"])
+@auth.login_required
+def HTTP_Device_Camera(device_id):
+    if request.method == "GET":
+        device = Device.devices[device_id]
+        for module in device.modules:
+            if module.archetype == "camera":
+                return Response(module.Start_Camera_Feed(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 ##################GROUPS################################
 
 @flask_server.route('/groups', methods=["GET", "POST", "DELETE"])
@@ -99,3 +110,5 @@ def HTTP_Group_Run(group_name):
         command = data["command"]
         message = Process_Command(Group_Run,[group_name, command])
         return(jsonify(message))
+
+

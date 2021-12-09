@@ -1,6 +1,8 @@
-from Device import Device, Group
+from Device import Device, Group, Module
 from DataFormatter import Protocol_Send
+import pickle
 import time
+import ast
 ################## Commands called from a client ############################
 def Set_Name(device, new_name):
     print(device, new_name)
@@ -17,8 +19,24 @@ def Set_Type(device, new_type):
     return({"message": f"{device.name}'s device type changed to {new_type}"})
 
 def Run_Output(device, output):
-    device.run_command_output = output
+    device.Set_Run_Output(output)
 
+def Attach_Module(device, data):
+    device = Device.devices[device]
+    device_module = Module(data[0], data[1])
+    device.Attach_Module(device_module)
+
+#TODO WHERE I LEFT OFF!
+def Set_Frame(device, data):
+    
+    device = Device.devices[device]
+    joined_data = " ".join(data)
+    frame = ast.literal_eval(joined_data)
+    frame = pickle.loads(frame)
+    for module in device.modules:
+        if module.archetype == "camera":
+            module.Set_Camera_Frame(frame)
+    return(None)
 
 ################## Commands called from server ############################
 def Send(device, message):
@@ -38,7 +56,7 @@ def List():
             connected = "Disconnected"
         for group in device.groups:
             group_names.append(group.name)
-        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names, "platform": device.os_platform, "serial": device.serial})
+        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names, "modules":device.modules, "platform": device.os_platform, "serial": device.serial})
     return(payload)
 
 def Delete(device):
@@ -51,20 +69,22 @@ def Run(device, run_command):
         timeout = 0
         message = {'message': 'Device not responding'}
         while device.run_command_output == None and timeout < 5:
-            time.sleep(1)
-            timeout += 1
+            time.sleep(.1)
+            timeout += .1
         message = device.Get_Runcommand_Output()
     
-    if message != None:
-        split_data = message.split("#|#")
-        payload = {}
+        if message != None:
+            split_data = message.split("#|#")
+            payload = {}
 
-        for x in split_data[1:]:
-            payload[x[:6]] = x[6:]
-
-        return(payload)
+            for x in split_data[1:]:
+                payload[x[:6]] = x[6:]
+            return(payload)
+        
+        else:
+            return({"message": f"{device.name} timed out"})
     else:
-        return({"message":f"{device} is not connected"}) 
+        return({"message":f"{device.name} is not connected"}) 
 
 def Group_Create(group_name):
     group_name = group_name.lower() 
