@@ -116,6 +116,33 @@
                 }
             }
         },
+        "/devices/{id}/camera": {
+            "get": {
+                "tags": [
+                    "/devices/{id}/commands"
+                ],
+                "summary": "Endpoint for the devices camera stream",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id of the device",
+                        "schema": {
+                            "$ref": "#/components/schemas/id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema":{
+                            "$ref": "#/components/schemas/deviceRequest"
+                        }
+                    }
+                }
+            }
+        },
         "/groups": {
             "get": {
                 "tags": [
