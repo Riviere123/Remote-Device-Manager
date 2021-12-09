@@ -51,11 +51,14 @@ def List():
         device = Device.devices[id]
         connected = "Connected"
         group_names = []
+        modules = []
         if device.client == None:
             connected = "Disconnected"
         for group in device.groups:
             group_names.append(group.name)
-        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names, "modules":device.modules, "platform": device.os_platform, "serial": device.serial})
+        for module in device.modules:
+            modules.append(module.name)
+        payload.append({"id":device.id, "name":device.name, "type":device.archetype, "status":connected, "groups":group_names, "modules":modules, "platform": device.os_platform, "serial": device.serial})
     return(payload)
 
 def Delete(device):

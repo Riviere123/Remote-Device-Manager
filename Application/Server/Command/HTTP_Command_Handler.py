@@ -64,6 +64,8 @@ def HTTP_Device_Camera(device_id):
         for module in device.modules:
             if module.archetype == "camera":            
                 return Response(module.Start_Camera_Feed(), mimetype='multipart/x-mixed-replace; boundary=frame')
+        message = {"message": "No camera detected or the camera is not active."}
+        return(jsonify(message))
 
 ##################GROUPS################################
 @flask_server.route('/groups', methods=["GET", "POST", "DELETE"])
