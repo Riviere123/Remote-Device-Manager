@@ -54,7 +54,7 @@ def Start_Camera():
     for mod in Device.this_device.modules:
         if mod.archetype == "camera":
             mod.Start_Camera()
-            return({"message": f"Camera on {mod.name} ended"})
+            return({"message": f"Camera on {mod.name} started"})
     return({"message": "No camera found"})
 
 def Stop_Camera():

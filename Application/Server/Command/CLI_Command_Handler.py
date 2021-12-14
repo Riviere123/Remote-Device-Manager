@@ -12,7 +12,7 @@ def Client_Command(client_device, data):                                     #Ca
     else:
         print(f"{client_device.name}: {data}")                              #If no command was found print the data to the server console
 
-def Server_Terminal():                                                       #This is our servers terminal and will find and execute commands from user input
+def Server_Terminal():                                                      #This is our servers terminal and will find and execute commands from user input
     data_input = input("\n")                                                #Terminal input
     split_data = data_input.split(" ")                                      #Split the data
     length, command = Check_For_Server_Command(split_data)                  #Returns length(The index where the command ends) and the command that was found                                                                    

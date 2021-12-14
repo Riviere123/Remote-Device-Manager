@@ -3,6 +3,9 @@ from Device import Device, Group
 import sys, os
 
 ###COMMANDS SUMMARY###
+#TODO: Simplify the following process. Turn commands into classes to add more functionality and handle the format and output automaticly.
+#      This will allow us to add a command by simply creating a new class instead.
+
 #NOTE: To add new commands first -> Create Command function inside Commands.py -> Add the command to the
 #      client_commands or server_commands dictionary depending on who you want
 #      to be able to call the command. -> Finally add the command to the Process_Command function
@@ -36,7 +39,7 @@ server_commands={         #Dictionary of what the server can enter in the termin
     "group delete":Group_Delete, "group remove":Group_Remove, "group send":Group_Send, "group run": Group_Run, 
     }
 
-#TODO: Can probably merge the to check_for_commands into one and pass in if the client or server is calling it instead.
+#TODO: Can merge the to check_for_commands into one and pass in if the client or server is calling it instead.
 
 def Check_For_Client_Command(split_data):                   #Checks for a command against the client_commands in the given list of strings
     for i in range(0,4):
