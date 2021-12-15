@@ -1,6 +1,6 @@
 import Config
 
-def generate_selfsigned_cert(hostname, ip_addresses=None, key=None):
+def generateSelfsignedCert(hostname, ip_addresses=None, key=None):
     """Generates self signed certificate for a hostname, and optional IP addresses."""
     from cryptography import x509
     from cryptography.x509.oid import NameOID
@@ -17,7 +17,7 @@ def generate_selfsigned_cert(hostname, ip_addresses=None, key=None):
             backend=default_backend(),
         )
     # Write our key to disk for safe keeping
-    with open("./Auth/key.pem", "wb") as f:
+    with open("./Authentication/key.pem", "wb") as f:
         f.write(key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -62,9 +62,9 @@ def generate_selfsigned_cert(hostname, ip_addresses=None, key=None):
         format=serialization.PrivateFormat.TraditionalOpenSSL,
         encryption_algorithm=serialization.NoEncryption(),
     )
-    with open("./Auth/certificate.pem", "wb") as f:
+    with open("./Authentication/certificate.pem", "wb") as f:
         f.write(cert.public_bytes(serialization.Encoding.PEM))
     return cert_pem, key_pem
 
 if __name__ == "__main__":
-    generate_selfsigned_cert(Config.HOST_NAME, ip_addresses=Config.CERT_IP)
+    generateSelfsignedCert(Config.HOST_NAME, ip_addresses=Config.CERT_IP)
