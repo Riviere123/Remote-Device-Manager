@@ -1,12 +1,13 @@
 import ssl, socket, threading, Config
-from Protocols import protocolReceive
+from SerialGenerator import Handle_Serial
+from Protocols import protocolReceive, protocolSend
 from enum import Enum
 
 
 class Connection_State(Enum):
-    connecting = 0
-    connected = 1
-    disconnected = 2
+    connecting = "connecting"
+    connected = "connected"
+    disconnected = "disconnected"
 
 class Connection():
     connections = []
@@ -20,10 +21,10 @@ class Connection():
         while True:                                   #If we have an active connection
             try:
                 data = protocolReceive(connection)    #Recieve data from server
-                #What to do with the data?!
+                #TODO: Server command handler
                 print(data)
             except:                             
-                self.disconnect()             
+                self._disconnect()             
                 break
 
     def connect(self):
@@ -33,19 +34,35 @@ class Connection():
         connection = certificate.wrap_socket(socket.socket(socket.AF_INET), server_hostname=self.host)
         connection.connect((self.host, self.port))
         self.connection = connection
+        self._sendSetupData()
         Connection.connections.append(connection)
         self.state = Connection_State.connected
         print(f"Connected to {self.host}:{self.port}")
         receive_thread = threading.Thread(target=self.handleConnection, args=(connection,))              #Create and start a thread to recieve data
         receive_thread.start()
-
     
-    def disconnect(self):
+    def _sendSetupData(self):
+        serial = Handle_Serial()
+        self.send(serial, None)
+
+    def _disconnect(self):
         Connection.connections.remove(self.connection)
         self.connection.close()
         self.state = Connection_State.disconnected
         print("Connection to host lost.")
-        
+    
+    def send(self, message, payload):
+        protocolSend(self.connection, message, payload)
+    
+
+def debugTerminal():
+    while True:
+        data = input("")
+
+
 if __name__ == "__main__":
     connection = Connection(Config.SERVER_IP, Config.SERVER_PORT)
     connection.connect()
+
+    debug_terminal_thread = threading.Thread(target=debugTerminal)
+    debug_terminal_thread.start()
